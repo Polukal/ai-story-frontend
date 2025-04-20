@@ -1,0 +1,30 @@
+.bubble {
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 6px 0;
+  max-width: 70%;
+  font-size: 15px;
+  line-height: 1.4;
+  word-break: break-word;
+  white-space: pre-wrap;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+}
+
+.user {
+  align-self: flex-end;
+  background-color: #3a3a3c;
+  color: #fff;
+}
+
+.ai {
+  align-self: flex-start;
+  background-color: #2a2a2c;
+  color: #f1f1f1;
+}
+
+.image {
+  width: 100%;
+  margin-top: 8px;
+  border-radius: 8px;
+  border: 1px solid #444;
+}/*# sourceMappingURL=MessageBubble.module.css.map */
