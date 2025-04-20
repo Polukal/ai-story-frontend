@@ -15,39 +15,55 @@ export default function Home() {
   const isLoading = isLoadingStory || isLoadingImage;
 
   const sendMessage = async (text: string) => {
-    // Add user message to chat
+    // Add user message
     setMessages((prev) => [...prev, { sender: "user", text }]);
     const updatedContext = [...context, { role: "user", content: text }];
-
+  
     try {
-      // Story generation
+      // Add 1 loading bubble for story
+      setMessages((prev) => [...prev, { sender: "ai", text: "__loading__" }]);
       setIsLoadingStory(true);
+  
       const storyRes = await api.post("/generate_story", {
         message: text,
         context: updatedContext,
       });
+  
       setIsLoadingStory(false);
-
       const storyText = storyRes.data.response;
       const newContext = [...updatedContext, { role: "assistant", content: storyText }];
-      setMessages((prev) => [...prev, { sender: "ai", text: storyText }]);
-
-      // Image generation
+  
+      // Replace loading bubble with story
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1] = { sender: "ai", text: storyText };
+        return updated;
+      });
+  
+      // Add 1 loading bubble for image
+      setMessages((prev) => [...prev, { sender: "ai", text: "__image_loading__" }]);
       setIsLoadingImage(true);
+  
       const imageRes = await api.post("/generate_image", {
         prompt: storyText,
       });
+  
       setIsLoadingImage(false);
-
       const imageURL = imageRes.data.image_url;
       const finalImageUrl =
         imageURL === "TEST_MODE" ? "/test_wizard.png" : imageURL;
-
-      setMessages((prev) => [
-        ...prev,
-        { sender: "ai", text: "🎨 Scene:", image: finalImageUrl },
-      ]);
-
+  
+      // Replace image loading with image
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1] = {
+          sender: "ai",
+          text: "🎨 Scene:",
+          image: finalImageUrl,
+        };
+        return updated;
+      });
+  
       setContext(newContext);
     } catch (err) {
       console.error("Error:", err);
@@ -55,23 +71,21 @@ export default function Home() {
       setIsLoadingImage(false);
     }
   };
+  
 
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>🧙‍♂️ AI Story Creator</h1>
 
       <div
-        className={`${chatStyles.container} ${
-          isLoading ? chatStyles.glowing : ""
-        }`}
+        className={`${chatStyles.container} ${isLoading ? chatStyles.loadingBorder : ""
+          }`}
       >
         <ChatWindow messages={messages} />
       </div>
 
-      {isLoadingStory && <div className={styles.loader}>✍️ Crafting story...</div>}
-      {isLoadingImage && <div className={styles.loader}>🎨 Painting scene...</div>}
-
       <ChatInput onSend={sendMessage} disabled={isLoading} />
     </main>
+
   );
 }

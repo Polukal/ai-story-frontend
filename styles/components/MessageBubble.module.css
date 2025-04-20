@@ -1,13 +1,30 @@
-.bubble {
+@keyframes glowTyping {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.bubble, .imageBubble {
   border-radius: 12px;
   padding: 10px 14px;
   margin: 6px 0;
-  max-width: 70%;
   font-size: 15px;
   line-height: 1.4;
   word-break: break-word;
   white-space: pre-wrap;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  max-width: 70%;
+}
+
+.imageBubble {
+  max-width: 100%;
+  padding: 10px;
+  background-color: #2a2a2c;
 }
 
 .user {
@@ -27,4 +44,20 @@
   margin-top: 8px;
   border-radius: 8px;
   border: 1px solid #444;
+}
+
+.loaderBubble {
+  align-self: flex-start;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: linear-gradient(270deg, #8e2de2, #c471ed, #8e2de2);
+  background-size: 600% 600%;
+  animation: glowTyping 3s ease infinite;
+  font-weight: bold;
+  color: white;
+  font-style: italic;
+  font-size: 15px;
+  margin: 6px 0;
+  display: flex;
+  align-items: center;
 }/*# sourceMappingURL=MessageBubble.module.css.map */

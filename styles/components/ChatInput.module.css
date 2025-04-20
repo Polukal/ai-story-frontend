@@ -5,6 +5,7 @@
   border-radius: 10px;
   padding: 6px;
   border: 1px solid #333;
+  width: 100%;
 }
 
 .input {
@@ -20,20 +21,18 @@
   color: #777;
   cursor: not-allowed;
 }
-
 .input::-moz-placeholder {
   color: #aaa;
 }
-
 .input::placeholder {
   color: #aaa;
 }
 
 .button {
-  background-color: #6900f3;
+  background-color: #7500f3;
   color: white;
-  font-weight: bold;
   border: none;
+  font-weight: bold;
   padding: 10px 18px;
   border-radius: 8px;
   font-size: 14px;
@@ -43,8 +42,4 @@
 .button:disabled {
   background-color: #444;
   cursor: not-allowed;
-}
-
-.button:hover {
-  background-color: #005dc1;
 }/*# sourceMappingURL=ChatInput.module.css.map */
