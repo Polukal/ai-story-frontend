@@ -3,9 +3,10 @@ import styles from "../styles/components/ChatInput.module.scss";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
+  disabled?: boolean;
 }
 
-export default function ChatInput({ onSend }: ChatInputProps) {
+export default function ChatInput({ onSend, disabled }: ChatInputProps) {
   const [input, setInput] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -24,8 +25,9 @@ export default function ChatInput({ onSend }: ChatInputProps) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         className={styles.input}
+        disabled={disabled}
       />
-      <button type="submit" className={styles.button}>
+      <button type="submit" className={styles.button} disabled={disabled}>
         Send
       </button>
     </form>

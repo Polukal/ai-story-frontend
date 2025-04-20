@@ -1,3 +1,14 @@
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 8px #8e2de2;
+  }
+  50% {
+    box-shadow: 0 0 20px #c471ed;
+  }
+  100% {
+    box-shadow: 0 0 8px #8e2de2;
+  }
+}
 .container {
   display: flex;
   flex-direction: column;
@@ -6,5 +17,11 @@
   padding: 1rem;
   background-color: #1c1c1e;
   border-radius: 12px;
-  border: 1px solid #333;
+  border: 2px solid #333;
+  transition: box-shadow 0.3s ease;
+}
+
+.glowing {
+  animation: glowPulse 1.5s infinite ease-in-out;
+  border-color: #8e2de2;
 }/*# sourceMappingURL=ChatWindow.module.css.map */
