@@ -1,11 +1,10 @@
 .form {
   display: flex;
-  margin-top: 1rem;
   background-color: #1c1c1e;
-  border-radius: 10px;
   padding: 6px;
-  border: 1px solid #333;
   width: 100%;
+  border-radius: 12px;
+  border: 3px solid #333;
 }
 
 .input {
@@ -19,11 +18,13 @@
 
   &:disabled {
     color: #777;
+    font-weight: bold;
     cursor: not-allowed;
   }
 
   &::placeholder {
     color: #aaa;
+    font-weight: bold;
   }
 }
 
