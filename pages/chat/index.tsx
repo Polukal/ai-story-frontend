@@ -6,6 +6,7 @@ import { Message } from "../../types/message";
 import styles from "../../styles/chat/ChatPage.module.scss";
 import chatStyles from "../../styles/chat/components/ChatWindow.module.scss";
 import ImageModal from "../../components/ImageModal";
+import Link from "next/link";
 
 
 export default function Home() {
@@ -92,7 +93,9 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <h1 className={styles.title}>🧙‍♂️ AI Story Creator</h1>
+      <Link href='/'>
+        <h1 className={styles.title}>🧙‍♂️ AI Story Creator</h1>
+      </Link>
 
       <div
         className={`${chatStyles.container} ${isLoading ? chatStyles.loadingBorder : ""}`}
