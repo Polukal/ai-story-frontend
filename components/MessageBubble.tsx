@@ -28,7 +28,14 @@ export default function MessageBubble({ sender, text, image }: Props) {
     <div className={baseClass}>
       <div>{text}</div>
       {image && (
-        <img src={image} alt="Story visual" className={styles.image} />
+        <img
+        src={image}
+        alt="Story visual"
+        className={styles.image}
+        onClick={() => window.dispatchEvent(new CustomEvent("imageClick", { detail: image }))}
+        style={{ cursor: "pointer" }}
+      />
+      
       )}
     </div>
   );
