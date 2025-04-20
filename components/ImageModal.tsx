@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "../styles/components/ImageModal.module.scss";
+import styles from "../styles/chat/components/ImageModal.module.scss";
 
 interface ImageModalProps {
   imageUrl: string;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "../styles/components/ChatInput.module.scss";
+import styles from "../styles/chat/components/ChatInput.module.scss";
 
 interface ChatInputProps {
   onSend: (message: string) => void;

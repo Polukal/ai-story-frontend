@@ -1,112 +1,16 @@
-import { useEffect, useState } from "react";
-import ChatWindow from "../components/ChatWindow";
-import ChatInput from "../components/ChatInput";
-import api from "../utils/api";
-import { Message } from "../types/message";
-import styles from "../styles/Home.module.scss";
-import chatStyles from "../styles/components/ChatWindow.module.scss";
-import ImageModal from "../components/ImageModal";
-
+import Link from "next/link";
+import styles from "../styles/Landing.module.scss";
 
 export default function Home() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [context, setContext] = useState<any[]>([]);
-  const [isLoadingStory, setIsLoadingStory] = useState(false);
-  const [isLoadingImage, setIsLoadingImage] = useState(false);
-  const [activeImage, setActiveImage] = useState<string | null>(null);
-
-
-  useEffect(() => {
-    const handleImageClick = (e: Event) => {
-      const detail = (e as CustomEvent).detail;
-      if (typeof detail === "string") {
-        setActiveImage(detail);
-      }
-    };
-  
-    window.addEventListener("imageClick", handleImageClick);
-    return () => window.removeEventListener("imageClick", handleImageClick);
-  }, []);
-
-  
-  const isLoading = isLoadingStory || isLoadingImage;
-
-  const sendMessage = async (text: string) => {
-    // Add user message
-    setMessages((prev) => [...prev, { sender: "user", text }]);
-    const updatedContext = [...context, { role: "user", content: text }];
-
-    try {
-      // Add 1 loading bubble for story
-      setMessages((prev) => [...prev, { sender: "ai", text: "__loading__" }]);
-      setIsLoadingStory(true);
-
-      const storyRes = await api.post("/generate_story", {
-        message: text,
-        context: updatedContext,
-      });
-
-      setIsLoadingStory(false);
-      const storyText = storyRes.data.response;
-      const newContext = [...updatedContext, { role: "assistant", content: storyText }];
-
-      // Replace loading bubble with story
-      setMessages((prev) => {
-        const updated = [...prev];
-        updated[updated.length - 1] = { sender: "ai", text: storyText };
-        return updated;
-      });
-
-      // Add 1 loading bubble for image
-      setMessages((prev) => [...prev, { sender: "ai", text: "__image_loading__" }]);
-      setIsLoadingImage(true);
-
-      const imageRes = await api.post("/generate_image", {
-        prompt: storyText,
-      });
-
-      setIsLoadingImage(false);
-      const imageURL = imageRes.data.image_url;
-      const finalImageUrl =
-        imageURL === "TEST_MODE" ? "/test_wizard.png" : imageURL;
-
-      // Replace image loading with image
-      setMessages((prev) => {
-        const updated = [...prev];
-        updated[updated.length - 1] = {
-          sender: "ai",
-          text: "🎨 Scene:",
-          image: finalImageUrl,
-        };
-        return updated;
-      });
-
-      setContext(newContext);
-    } catch (err) {
-      console.error("Error:", err);
-      setIsLoadingStory(false);
-      setIsLoadingImage(false);
-    }
-  };
-
-
   return (
-    <main className={styles.main}>
+    <div className={styles.container}>
       <h1 className={styles.title}>🧙‍♂️ AI Story Creator</h1>
-
-      <div
-        className={`${chatStyles.container} ${isLoading ? chatStyles.loadingBorder : ""
-          }`}
-      >
-        <ChatWindow messages={messages} />
-      </div>
-
-      {activeImage && (
-        <ImageModal imageUrl={activeImage} onClose={() => setActiveImage(null)} />
-      )}
-
-      <ChatInput onSend={sendMessage} disabled={isLoading} />
-    </main>
-
+      <p className={styles.subtitle}>
+        Enter a realm where imagination and magic come alive. Generate your own interactive fantasy stories with AI-powered narration and visuals.
+      </p>
+      <Link href="/chat" className={styles.button}>
+        Enter the Realm
+      </Link>
+    </div>
   );
 }

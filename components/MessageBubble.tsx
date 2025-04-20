@@ -1,4 +1,4 @@
-import styles from "../styles/components/MessageBubble.module.scss";
+import styles from "../styles/chat/components/MessageBubble.module.scss";
 import { Message } from "../types/message";
 
 interface Props extends Message {}
