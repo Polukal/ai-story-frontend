@@ -3,26 +3,28 @@ import { useRouter } from "next/router";
 import api from "../utils/api";
 import styles from "../styles/pages/Auth.module.scss";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setAuthenticated } = useAuth();
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await api.post("/auth/login", { email, password }, { withCredentials: true });
+      setAuthenticated(true);
       router.push("/chat");
-    } catch (err) {
+    } catch {
       alert("Login failed");
     }
   };
 
+
   return (
     <div className={styles.container}>
-      <Navbar/>
       <h2 className={styles.title}>Login to Your Realm</h2>
       <form className={styles.form} onSubmit={handleLogin}>
         <input type="email" placeholder="Email" className={styles.input} value={email} onChange={(e) => setEmail(e.target.value)} required />

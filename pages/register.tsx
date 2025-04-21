@@ -35,7 +35,6 @@ export default function Register() {
 
   return (
     <div className={styles.container}>
-      <Navbar/>
       <h2 className={styles.title}>Create Your Account</h2>
       <form className={styles.form} onSubmit={handleRegister}>
         <input

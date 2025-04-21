@@ -1,26 +1,9 @@
 import Link from "next/link";
 import styles from "../styles/Landing.module.scss";
-import api from "../utils/api";
-import { useRouter } from "next/router";
-import Navbar from "@/components/Navbar";
 
 export default function Home() {
-
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    try {
-      await api.post("/auth/logout", {}, { withCredentials: true });
-      router.push("/login");
-    } catch (err) {
-      console.error("Logout failed", err);
-    }
-  };
-
-
   return (
-    <div className={styles.container}>
-      <Navbar/>
+    <>
       <h1 className={styles.title}>🧙‍♂️ AI Story Creator</h1>
 
       <p className={styles.subtitle}>
@@ -29,6 +12,6 @@ export default function Home() {
       <Link href="/chat" className={styles.button}>
         Enter the Realm
       </Link>
-    </div>
+    </>
   );
 }
