@@ -26,7 +26,7 @@ export default function MessageBubble({ sender, text, image }: Props) {
 
   return (
     <div className={baseClass}>
-      <div>{text}</div>
+      <div className={styles.response_text}>{text}</div>
       {image && (
         <img
         src={image}

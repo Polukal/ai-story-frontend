@@ -8,7 +8,6 @@ import ImageModal from "../../components/ImageModal";
 import { useState, useEffect } from "react";
 import { Message } from "../../types/message";
 import api from "../../utils/api";
-import Link from "next/link";
 import { withAuthSSR } from "../../utils/withAuthSSR";
 
 export const getServerSideProps = withAuthSSR();

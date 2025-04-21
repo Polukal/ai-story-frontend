@@ -3,11 +3,10 @@ import Link from "next/link";
 import styles from "../styles/components/Navbar.module.scss";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { useAuth } from "../contexts/AuthContext";
 
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { isAuthenticated, setAuthenticated } = useAuth();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -19,12 +18,18 @@ export default function Navbar() {
         {},
         { withCredentials: true }
       );
-      setAuthenticated(false);
+      localStorage.setItem("isLoggedIn", "false");
+      setIsLoggedIn(false);
       router.push("/login");
     } catch (err) {
       console.error("Logout error", err);
     }
   };
+
+  useEffect(() => {
+    const stored = localStorage.getItem("isLoggedIn");
+    setIsLoggedIn(stored === "true");
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -56,13 +61,11 @@ export default function Navbar() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
-        {/* Logo */}
         <Link href="/" className={styles.logo}>
           <img src="/purple_wizard_logo.png" alt="Purple Wizard" />
           <span>Purple Wizard</span>
         </Link>
 
-        {/* Right side */}
         <div className={styles.right}>
           <div className={styles.avatarWrapper} ref={dropdownRef}>
             <h1
@@ -73,7 +76,7 @@ export default function Navbar() {
             </h1>
             {dropdownOpen && (
               <div className={styles.dropdown}>
-                {isAuthenticated ? (
+                {isLoggedIn ? (
                   <>
                     <Link href="/account" className={styles.dropdownItem}>
                       My Account
