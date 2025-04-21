@@ -9,22 +9,9 @@ import { useState, useEffect } from "react";
 import { Message } from "../../types/message";
 import api from "../../utils/api";
 import Link from "next/link";
+import { withAuthSSR } from "../../utils/withAuthSSR";
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const cookies = parseCookies(ctx);
-  const token = cookies.access_token_cookie;
-
-  if (!token) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: {} };
-};
+export const getServerSideProps = withAuthSSR();
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
