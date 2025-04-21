@@ -8,7 +8,7 @@ import { useAuth } from "../contexts/AuthContext";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, checkAuth } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -18,8 +18,16 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await api.post("/auth/login", { email, password });
-      localStorage.setItem("token", res.data.access_token);
+      await api.post(
+        "/auth/login",
+        { email, password },
+        { withCredentials: true }
+      );
+
+      // ✅ Re-check auth state after login
+      await checkAuth();
+
+      // ✅ Then route
       router.push("/chat");
     } catch (err) {
       alert("Login failed");

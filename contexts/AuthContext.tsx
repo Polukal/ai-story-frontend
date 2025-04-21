@@ -1,35 +1,43 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { useRouter } from "next/router";
+import { createContext, useContext, useEffect, useState } from "react";
+import api from "../utils/api";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  token: string | null;
-  logout: () => void;
+  setIsAuthenticated: (val: boolean) => void;
+  loading: boolean;
+  checkAuth: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
-  token: null,
-  logout: () => {},
+  setIsAuthenticated: () => {},
+  loading: true,
+  checkAuth: async () => {},
 });
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(null);
-  const router = useRouter();
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const stored = localStorage.getItem("token");
-    if (stored) setToken(stored);
-  }, []);
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    router.push("/login");
+  const checkAuth = async () => {
+    try {
+      await api.get("/auth/profile", { withCredentials: true });
+      setIsAuthenticated(true);
+    } catch (err) {
+      setIsAuthenticated(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated: !!token, token, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, setIsAuthenticated, loading, checkAuth }}
+    >
       {children}
     </AuthContext.Provider>
   );

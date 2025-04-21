@@ -7,24 +7,26 @@ import styles from "../../styles/chat/ChatPage.module.scss";
 import chatStyles from "../../styles/chat/components/ChatWindow.module.scss";
 import ImageModal from "../../components/ImageModal";
 import Link from "next/link";
-import { isLoggedIn } from "../../utils/auth";
-import withAuth from "../../components/withAuth";
+import { useRouter } from "next/router";
+import { useAuth } from "../../contexts/AuthContext";
 
-function ChatPage() {
+export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [context, setContext] = useState<any[]>([]);
   const [isLoadingStory, setIsLoadingStory] = useState(false);
   const [isLoadingImage, setIsLoadingImage] = useState(false);
   const [activeImage, setActiveImage] = useState<string | null>(null);
-  const [isAuthChecked, setIsAuthChecked] = useState(false);
+
+  const { isAuthenticated, loading } = useAuth();
+  const router = useRouter();
 
   const isLoading = isLoadingStory || isLoadingImage;
 
   useEffect(() => {
-    if (isLoggedIn()) {
-      setIsAuthChecked(true);
+    if (!loading && !isAuthenticated) {
+      router.push("/login");
     }
-  }, []);
+  }, [loading, isAuthenticated]);
 
   useEffect(() => {
     const handleImageClick = (e: Event) => {
@@ -91,8 +93,11 @@ function ChatPage() {
     }
   };
 
-  if (!isLoggedIn()) return null;
-  if (!isAuthChecked) return <div style={{ padding: "2rem", color: "#fff" }}>Checking authentication...</div>;
+  if (loading) {
+    return <div className={styles.loading}>Checking authentication...</div>;
+  }
+
+  if (!isAuthenticated) return null;
 
   return (
     <main className={styles.main}>
@@ -114,5 +119,3 @@ function ChatPage() {
     </main>
   );
 }
-
-export default withAuth(ChatPage);
