@@ -1,14 +1,30 @@
-import { useEffect, useState } from "react";
+import { GetServerSideProps } from "next";
+import { parseCookies } from "nookies";
 import ChatWindow from "../../components/ChatWindow";
 import ChatInput from "../../components/ChatInput";
-import api from "../../utils/api";
-import { Message } from "../../types/message";
 import styles from "../../styles/chat/ChatPage.module.scss";
 import chatStyles from "../../styles/chat/components/ChatWindow.module.scss";
 import ImageModal from "../../components/ImageModal";
+import { useState, useEffect } from "react";
+import { Message } from "../../types/message";
+import api from "../../utils/api";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useAuth } from "../../contexts/AuthContext";
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const cookies = parseCookies(ctx);
+  const token = cookies.access_token_cookie;
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: {} };
+};
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -17,16 +33,7 @@ export default function ChatPage() {
   const [isLoadingImage, setIsLoadingImage] = useState(false);
   const [activeImage, setActiveImage] = useState<string | null>(null);
 
-  const { isAuthenticated, loading } = useAuth();
-  const router = useRouter();
-
   const isLoading = isLoadingStory || isLoadingImage;
-
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      router.push("/login");
-    }
-  }, [loading, isAuthenticated]);
 
   useEffect(() => {
     const handleImageClick = (e: Event) => {
@@ -93,28 +100,15 @@ export default function ChatPage() {
     }
   };
 
-  if (loading) {
-    return <div className={styles.loading}>Checking authentication...</div>;
-  }
-
-  if (!isAuthenticated) return null;
-
   return (
     <main className={styles.main}>
       <Link href='/'>
         <h1 className={styles.title}>🧙‍♂️ AI Story Creator</h1>
       </Link>
-
-      <div
-        className={`${chatStyles.container} ${isLoading ? chatStyles.loadingBorder : ""}`}
-      >
+      <div className={`${chatStyles.container} ${isLoading ? chatStyles.loadingBorder : ""}`}>
         <ChatWindow messages={messages} />
       </div>
-
-      {activeImage && (
-        <ImageModal imageUrl={activeImage} onClose={() => setActiveImage(null)} />
-      )}
-
+      {activeImage && <ImageModal imageUrl={activeImage} onClose={() => setActiveImage(null)} />}
       <ChatInput onSend={sendMessage} disabled={isLoading} />
     </main>
   );
