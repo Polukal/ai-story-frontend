@@ -7,15 +7,24 @@ import styles from "../../styles/chat/ChatPage.module.scss";
 import chatStyles from "../../styles/chat/components/ChatWindow.module.scss";
 import ImageModal from "../../components/ImageModal";
 import Link from "next/link";
+import { isLoggedIn } from "../../utils/auth";
+import withAuth from "../../components/withAuth";
 
-
-export default function Home() {
+function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [context, setContext] = useState<any[]>([]);
   const [isLoadingStory, setIsLoadingStory] = useState(false);
   const [isLoadingImage, setIsLoadingImage] = useState(false);
   const [activeImage, setActiveImage] = useState<string | null>(null);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
 
+  const isLoading = isLoadingStory || isLoadingImage;
+
+  useEffect(() => {
+    if (isLoggedIn()) {
+      setIsAuthChecked(true);
+    }
+  }, []);
 
   useEffect(() => {
     const handleImageClick = (e: Event) => {
@@ -29,16 +38,11 @@ export default function Home() {
     return () => window.removeEventListener("imageClick", handleImageClick);
   }, []);
 
-
-  const isLoading = isLoadingStory || isLoadingImage;
-
   const sendMessage = async (text: string) => {
-    // Add user message
     setMessages((prev) => [...prev, { sender: "user", text }]);
     const updatedContext = [...context, { role: "user", content: text }];
 
     try {
-      // Add 1 loading bubble for story
       setMessages((prev) => [...prev, { sender: "ai", text: "__loading__" }]);
       setIsLoadingStory(true);
 
@@ -51,14 +55,12 @@ export default function Home() {
       const storyText = storyRes.data.response;
       const newContext = [...updatedContext, { role: "assistant", content: storyText }];
 
-      // Replace loading bubble with story
       setMessages((prev) => {
         const updated = [...prev];
         updated[updated.length - 1] = { sender: "ai", text: storyText };
         return updated;
       });
 
-      // Add 1 loading bubble for image
       setMessages((prev) => [...prev, { sender: "ai", text: "__image_loading__" }]);
       setIsLoadingImage(true);
 
@@ -71,7 +73,6 @@ export default function Home() {
       const finalImageUrl =
         imageURL === "TEST_MODE" ? "/test_wizard.png" : imageURL;
 
-      // Replace image loading with image
       setMessages((prev) => {
         const updated = [...prev];
         updated[updated.length - 1] = {
@@ -90,6 +91,8 @@ export default function Home() {
     }
   };
 
+  if (!isLoggedIn()) return null;
+  if (!isAuthChecked) return <div style={{ padding: "2rem", color: "#fff" }}>Checking authentication...</div>;
 
   return (
     <main className={styles.main}>
@@ -110,5 +113,6 @@ export default function Home() {
       <ChatInput onSend={sendMessage} disabled={isLoading} />
     </main>
   );
-
 }
+
+export default withAuth(ChatPage);

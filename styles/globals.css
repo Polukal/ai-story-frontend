@@ -40,3 +40,37 @@ a {
     color-scheme: dark;
   }
 }
+
+/*
+  CSS to override React phone input external components -- START
+*/
+
+.react-tel-input .flag-dropdown{
+  border-radius: 8px !important;  
+}
+
+.react-tel-input .flag-dropdown .selected-flag{
+  border-top-left-radius: 8px !important;
+  border-bottom-left-radius: 8px !important;
+}
+
+.react-tel-input .selected-flag {
+  background-color: #2a2a2a !important;
+}
+
+.react-tel-input .country-list{
+  background-color: #2a2a2a !important;
+}
+
+.react-tel-input .country-list li:hover{
+  background-color: #0a0a0a !important;
+}
+
+.react-tel-input .country-list .highlight{
+  background-color: #0a0a0a !important;
+}
+
+/*
+  CSS to override React phone input external components -- END
+*/
+
