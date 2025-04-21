@@ -5,6 +5,7 @@ import "react-phone-input-2/lib/style.css";
 import styles from "../styles/pages/Auth.module.scss";
 import Link from "next/link";
 import PhoneInput from "react-phone-input-2";
+import Navbar from "@/components/Navbar";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -34,6 +35,7 @@ export default function Register() {
 
   return (
     <div className={styles.container}>
+      <Navbar/>
       <h2 className={styles.title}>Create Your Account</h2>
       <form className={styles.form} onSubmit={handleRegister}>
         <input

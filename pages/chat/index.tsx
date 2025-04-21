@@ -90,7 +90,10 @@ export default function ChatPage() {
   return (
     <main className={styles.main}>
       <Link href='/'>
-        <h1 className={styles.title}>🧙‍♂️ AI Story Creator</h1>
+        <h1 className={styles.title}>
+          <img src="/purple_wizard_logo.png" alt="Purple Wizard" />
+          <span>Purple Wizard</span>
+        </h1>
       </Link>
       <div className={`${chatStyles.container} ${isLoading ? chatStyles.loadingBorder : ""}`}>
         <ChatWindow messages={messages} />

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import api from "../utils/api";
 import styles from "../styles/pages/Auth.module.scss";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -21,6 +22,7 @@ export default function Login() {
 
   return (
     <div className={styles.container}>
+      <Navbar/>
       <h2 className={styles.title}>Login to Your Realm</h2>
       <form className={styles.form} onSubmit={handleLogin}>
         <input type="email" placeholder="Email" className={styles.input} value={email} onChange={(e) => setEmail(e.target.value)} required />

@@ -2,6 +2,7 @@ import Link from "next/link";
 import styles from "../styles/Landing.module.scss";
 import api from "../utils/api";
 import { useRouter } from "next/router";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
 
@@ -19,10 +20,8 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
+      <Navbar/>
       <h1 className={styles.title}>🧙‍♂️ AI Story Creator</h1>
-      <button onClick={handleLogout} style={{ position: "absolute", top: 20, right: 20 }}>
-        Logout
-      </button>
 
       <p className={styles.subtitle}>
         Enter a realm where imagination and magic come alive. Generate your own interactive fantasy stories with AI-powered narration and visuals.
