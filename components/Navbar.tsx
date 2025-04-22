@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import styles from "../styles/components/Navbar.module.scss";
 import { useRouter } from "next/router";
-import axios from "axios";
+import api from "../utils/api";
+
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
@@ -14,8 +15,8 @@ export default function Navbar() {
   const handleLogout = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "http://localhost:5050/api/auth/logout",
+      await api.post(
+        "/auth/logout",
         {},
         { withCredentials: true }
       );
