@@ -1,5 +1,3 @@
-import { GetServerSideProps } from "next";
-import { parseCookies } from "nookies";
 import ChatWindow from "../../components/ChatWindow";
 import ChatInput from "../../components/ChatInput";
 import styles from "../../styles/chat/ChatPage.module.scss";
