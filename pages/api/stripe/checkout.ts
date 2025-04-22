@@ -9,6 +9,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    // Grab email and credit count from request (or session)
+    const { email, credits = 10 } = req.body;
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
@@ -16,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           price_data: {
             currency: "usd",
             product_data: {
-              name: "Credit Pack (10 Credits)",
+              name: `Credit Pack (${credits} Credits)`,
             },
             unit_amount: 499, // $4.99
           },
@@ -24,6 +27,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       ],
       mode: "payment",
+      metadata: {
+        credits: String(credits),
+        customer_email: email, // needed for backend lookup
+      },
+      customer_email: email, // this fills session.customer_email
       success_url: `${req.headers.origin}/success`,
       cancel_url: `${req.headers.origin}/cancel`,
     });
