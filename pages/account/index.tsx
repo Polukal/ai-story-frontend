@@ -17,6 +17,18 @@ export default function AccountPage() {
     fetchProfile();
   }, []);
 
+  const handleBuyCredits = async () => {
+    const res = await fetch("/api/stripe/checkout", {
+      method: "POST",
+    });
+
+    const data = await res.json();
+    if (data.sessionUrl) {
+      window.location.href = data.sessionUrl;
+    }
+  };
+
+
   if (!profile) return <div className={styles.loading}>Loading profile...</div>;
 
   return (
@@ -28,6 +40,11 @@ export default function AccountPage() {
         <p><strong>First Name:</strong> {profile.first_name}</p>
         <p><strong>Last Name:</strong> {profile.last_name}</p>
         <p><strong>Phone:</strong> {profile.phone}</p>
+
+        <button onClick={handleBuyCredits} className={styles.button}>
+          Buy Credits 💎
+        </button>
+
       </div>
     </>
   );

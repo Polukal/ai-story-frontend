@@ -7,10 +7,12 @@ import { useState, useEffect } from "react";
 import { Message } from "../../types/message";
 import api from "../../utils/api";
 import { withAuthSSR } from "../../utils/withAuthSSR";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const getServerSideProps = withAuthSSR();
 
 export default function ChatPage() {
+  const { setIsLoggedIn } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [context, setContext] = useState<any[]>([]);
   const [isLoadingStory, setIsLoadingStory] = useState(false);
@@ -27,6 +29,9 @@ export default function ChatPage() {
       }
     };
 
+    //set context logged in true because the SSR succeeded.
+    setIsLoggedIn(true)
+    
     window.addEventListener("imageClick", handleImageClick);
     return () => window.removeEventListener("imageClick", handleImageClick);
   }, []);
