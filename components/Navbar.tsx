@@ -3,10 +3,11 @@ import Link from "next/link";
 import styles from "../styles/components/Navbar.module.scss";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -18,18 +19,12 @@ export default function Navbar() {
         {},
         { withCredentials: true }
       );
-      localStorage.setItem("isLoggedIn", "false");
-      setIsLoggedIn(false);
+      setIsLoggedIn(false)
       router.push("/login");
     } catch (err) {
       console.error("Logout error", err);
     }
   };
-
-  useEffect(() => {
-    const stored = localStorage.getItem("isLoggedIn");
-    setIsLoggedIn(stored === "true");
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

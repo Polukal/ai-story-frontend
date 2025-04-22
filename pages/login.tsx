@@ -3,8 +3,10 @@ import { useRouter } from "next/navigation";
 import api from "../utils/api";
 import styles from "../styles/pages/Auth.module.scss";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Login() {
+  const { setIsLoggedIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -13,8 +15,7 @@ export default function Login() {
     e.preventDefault();
     try {
       await api.post("/auth/login", { email, password }, { withCredentials: true });
-      localStorage.setItem("isLoggedIn", "true");
-      router.refresh();
+      setIsLoggedIn(true)
       router.push("/chat");
     } catch {
       alert("Login failed");
