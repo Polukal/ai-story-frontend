@@ -1,8 +1,20 @@
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import styles from "../../styles/pages/Account.module.scss";
+import { withAuthSSR } from "../../utils/withAuthSSR";
+import { useAuth } from "@/contexts/AuthContext";
+
+export const getServerSideProps = withAuthSSR();
 
 export default function AccountPage() {
+
+  const { setIsLoggedIn } = useAuth();
+
+  useEffect(() => {
+      //set context logged in true because the SSR succeeded.
+      setIsLoggedIn(true)
+  }, []);
+
   const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {

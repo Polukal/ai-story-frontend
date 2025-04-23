@@ -1,11 +1,12 @@
 import Link from "next/link";
 import styles from "../styles/Landing.module.scss";
+import { useCheckLoggedIn } from "@/utils/useCheckLoggedIn";
 
 export default function Home() {
+  useCheckLoggedIn();
   return (
     <>
       <h1 className={styles.title}>🧙‍♂️ AI Story Creator</h1>
-
       <p className={styles.subtitle}>
         Enter a realm where imagination and magic come alive. Generate your own interactive fantasy stories with AI-powered narration and visuals.
       </p>
