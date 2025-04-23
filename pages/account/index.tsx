@@ -29,22 +29,6 @@ export default function AccountPage() {
     fetchProfile();
   }, []);
 
-  const handleBuyCredits = async () => {
-    try {
-      const res = await api.post("/stripe/checkout", {
-        email: profile.email,
-        credits: 10,
-      });
-
-      const sessionUrl = res.data.sessionUrl;
-      if (sessionUrl) {
-        window.location.href = sessionUrl;
-      }
-    } catch (err) {
-      console.error("Checkout session error:", err);
-    }
-  };
-
   if (!profile) return <div className={styles.loading}>Loading profile...</div>;
 
   return (
@@ -57,10 +41,6 @@ export default function AccountPage() {
         <p><strong>Last Name:</strong> {profile.last_name}</p>
         <p><strong>Phone:</strong> {profile.phone}</p>
         <p><strong>Credits:</strong> {profile.credits ?? 0}</p>
-
-        <button onClick={handleBuyCredits} className={styles.button}>
-          Buy Credits 💎
-        </button>
       </div>
     </>
   );
