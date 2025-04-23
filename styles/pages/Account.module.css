@@ -1,31 +1,136 @@
-.container {
-  max-width: 600px;
-  margin: 5rem auto;
-  padding: 2rem;
+.profileContainer {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
   color: white;
+  width: 100%;
 }
 
-.title {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
-  color: #c084fc;
+.profileCard {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  background: #2d2148;
+  border-radius: 1rem;
+  padding: 2rem;
+  width: 100%;
+  max-width: 75%;
+  box-shadow: 0 0 1.25rem rgba(130, 0, 200, 0.4);
+  gap: 2rem;
+}
+
+.avatarSection {
+  flex: 1;
   text-align: center;
 }
+.avatarSection .avatar {
+  width: 6.25rem;
+  border-radius: 999rem;
+  margin-bottom: 1rem;
+}
+.avatarSection h2 {
+  color: #d8b4fe;
+  font-size: 1.5rem;
+}
+.avatarSection p {
+  color: #a78bfa;
+  font-size: 1rem;
+  margin: 0.25rem 0;
+}
 
-.card {
-  background-color: #1e1e1e;
-  border: 1px solid #333;
-  border-radius: 10px;
-  padding: 2rem;
-  box-shadow: 0 0 12px rgba(130, 0, 200, 0.2);
+.statsSection {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
-.card p {
-  margin: 0.5rem 0;
-  font-size: 1.1rem;
+.statsSection .profileStat {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
-.card p strong {
-  color: #a855f7;
+.statsSection .profileStat label {
+  display: block;
+  font-weight: bold;
+  color: #a78bfa;
+  font-size: 1rem;
+}
+.statsSection .profileStat .statValue {
+  padding: 0.4rem 0.75rem;
+  background: #3b2d59;
+  border-radius: 0.375rem;
+  font-size: 0.95rem;
+  color: #e0e0ff;
+  margin-top: 0.2rem;
+  width: 100%;
+}
+
+.equipmentSection,
+.inventorySection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.equipmentSection h3,
+.inventorySection h3 {
+  color: #c084fc;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+.equipmentSection .equipmentGrid,
+.equipmentSection .inventoryGrid,
+.inventorySection .equipmentGrid,
+.inventorySection .inventoryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.equipmentSection .equipmentGrid .eqIcon,
+.equipmentSection .equipmentGrid .invIcon,
+.equipmentSection .inventoryGrid .eqIcon,
+.equipmentSection .inventoryGrid .invIcon,
+.inventorySection .equipmentGrid .eqIcon,
+.inventorySection .equipmentGrid .invIcon,
+.inventorySection .inventoryGrid .eqIcon,
+.inventorySection .inventoryGrid .invIcon {
+  width: 6.875rem;
+  height: 4.375rem;
+  background: #3f2a61;
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 1.05rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+}
+.equipmentSection .equipmentGrid .eqIcon::before,
+.equipmentSection .equipmentGrid .invIcon::before,
+.equipmentSection .inventoryGrid .eqIcon::before,
+.equipmentSection .inventoryGrid .invIcon::before,
+.inventorySection .equipmentGrid .eqIcon::before,
+.inventorySection .equipmentGrid .invIcon::before,
+.inventorySection .inventoryGrid .eqIcon::before,
+.inventorySection .inventoryGrid .invIcon::before {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+.equipmentSection .equipmentGrid .eqIcon span,
+.equipmentSection .equipmentGrid .invIcon span,
+.equipmentSection .inventoryGrid .eqIcon span,
+.equipmentSection .inventoryGrid .invIcon span,
+.inventorySection .equipmentGrid .eqIcon span,
+.inventorySection .equipmentGrid .invIcon span,
+.inventorySection .inventoryGrid .eqIcon span,
+.inventorySection .inventoryGrid .invIcon span {
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
 }
 
 .loading {

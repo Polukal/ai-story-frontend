@@ -7,15 +7,12 @@ import { useAuth } from "@/contexts/AuthContext";
 export const getServerSideProps = withAuthSSR();
 
 export default function AccountPage() {
-
   const { setIsLoggedIn } = useAuth();
+  const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
-      //set context logged in true because the SSR succeeded.
-      setIsLoggedIn(true)
+    setIsLoggedIn(true);
   }, []);
-
-  const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -32,16 +29,51 @@ export default function AccountPage() {
   if (!profile) return <div className={styles.loading}>Loading profile...</div>;
 
   return (
-    <>
-      <h1 className={styles.title}>👤 My Account</h1>
-      <div className={styles.card}>
-        <p><strong>Username:</strong> {profile.username}</p>
-        <p><strong>Email:</strong> {profile.email}</p>
-        <p><strong>First Name:</strong> {profile.first_name}</p>
-        <p><strong>Last Name:</strong> {profile.last_name}</p>
-        <p><strong>Phone:</strong> {profile.phone}</p>
-        <p><strong>Credits:</strong> {profile.credits ?? 0}</p>
+    <div className={styles.profileContainer}>
+      <div className={styles.profileCard}>
+        <div className={styles.avatarSection}>
+          <img src="/avatar_wizard.png" alt="avatar" className={styles.avatar} />
+          <h2>{profile.username}</h2>
+          <p>Level {profile.level || 15}</p>
+          <p>Credits: {profile.credits ?? 0}</p>
+        </div>
+
+        <div className={styles.statsSection}>
+          <ProfileStat label="First Name" value={profile.first_name || "N/A"} />
+          <ProfileStat label="Last Name" value={profile.last_name || "N/A"} />
+          <ProfileStat label="Email" value={profile.email} />
+          <ProfileStat label="Phone" value={profile.phone || "N/A"} />
+        </div>
+
+        <div className={styles.equipmentSection}>
+          <h3>Settings</h3>
+          <div className={styles.equipmentGrid}>
+            <div className={styles.eqIcon}>🔒<span>Change Password</span></div>
+            <div className={styles.eqIcon}>🎨<span>Theme</span></div>
+            <div className={styles.eqIcon}>🔔<span>Notifications</span></div>
+            <div className={styles.eqIcon}>🌐<span>Language</span></div>
+          </div>
+        </div>
+
+        <div className={styles.inventorySection}>
+          <h3>Account Info</h3>
+          <div className={styles.inventoryGrid}>
+            <div className={styles.invIcon}>📅<span>Joined: {profile.joined || "N/A"}</span></div>
+            <div className={styles.invIcon}>⏱<span>Last Login: {profile.last_login || "N/A"}</span></div>
+            <div className={styles.invIcon}>🆔<span>ID: {profile.id}</span></div>
+            <div className={styles.invIcon}>🛡️<span>Status: Active</span></div>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
+  );
+}
+
+function ProfileStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className={styles.profileStat}>
+      <label>{label}</label>
+      <div className={styles.statValue}>{value}</div>
+    </div>
   );
 }
