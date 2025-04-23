@@ -46,12 +46,12 @@ export default function AccountPage() {
         </div>
 
         <div className={styles.equipmentSection}>
-          <h3>Settings</h3>
+          <h3>Actions</h3>
           <div className={styles.equipmentGrid}>
+            <div className={styles.eqIcon}>🧝<span>Player Characters</span></div>
+            <div className={styles.eqIcon}>📖<span>Storytellers</span></div>
             <div className={styles.eqIcon}>🔒<span>Change Password</span></div>
-            <div className={styles.eqIcon}>🎨<span>Theme</span></div>
-            <div className={styles.eqIcon}>🔔<span>Notifications</span></div>
-            <div className={styles.eqIcon}>🌐<span>Language</span></div>
+            <div className={styles.eqIcon}>💬<span>Support</span></div>
           </div>
         </div>
 
