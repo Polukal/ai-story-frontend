@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 const creditTiers = {
   1: { label: "Single Credit", price: 249 },
@@ -26,25 +28,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { label, price } = creditTiers[creditValue];
 
-    const response = await axios.post(
-      "http://localhost:5050/api/payment/create-checkout-session",
-      {
-        email,
-        credits: creditValue,
-        label,
-        price,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: `${label} (${creditValue} Credits)`,
+            },
+            unit_amount: price,
+          },
+          quantity: 1,
         },
-        withCredentials: true,
-      }
-    );
+      ],
+      metadata: {
+        credits: String(creditValue),
+        customer_email: email,
+      },
+      customer_email: email,
+      success_url: `${req.headers.origin}/success`,
+      cancel_url: `${req.headers.origin}/cancel`,
+    });
 
-    res.status(200).json({ sessionUrl: response.data.url });
+    res.status(200).json({ sessionUrl: session.url });
   } catch (error: any) {
-    console.error("Flask backend error:", error);
-    res.status(500).json({ error: "Failed to create checkout session" });
+    console.error("Stripe error:", error);
+    res.status(500).json({ error: "Stripe session creation failed" });
   }
 }

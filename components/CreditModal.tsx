@@ -22,8 +22,9 @@ export default function CreditModal({ onClose }: Props) {
     setLoading(true);
     try {
       const selected = creditTiers[selectedIndex];
-      const response = await api.post("/api/stripe/checkout", {
+      const response = await api.post("/stripe/checkout", {
         credits: selected.credits,
+        email:"omer-meraloglu@hotmail.com"//test
       });
       window.location.href = response.data.sessionUrl;
     } catch (err) {
