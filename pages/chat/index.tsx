@@ -224,6 +224,21 @@ export default function ChatPage() {
 
   return (
     <main className={styles.main}>
+      <div className={styles.sidebar}>
+        <div className={styles.profileCard}>
+          <h3>Storyteller</h3>
+          <img src="/avatar_wizard.png" className={styles.sidebarImage} alt="Storyteller" />
+          <h4>{storyteller?.title}</h4>
+          <p>{storyteller?.genre} • {storyteller?.tone}</p>
+        </div>
+        <div className={styles.profileCard}>
+          <h3>Player Character</h3>
+          <img src="/avatar_wizard.png" className={styles.sidebarImage} alt="Character" />
+          <h4>{character?.name}</h4>
+          <p>{character?.role}</p>
+          <small>{character?.traits}</small>
+        </div>
+      </div>
       <div className={`${chatStyles.container} ${isLoading ? chatStyles.loadingBorder : ""}`}>
         <ChatWindow messages={messages} />
       </div>
