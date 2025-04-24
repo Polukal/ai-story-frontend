@@ -4,6 +4,7 @@ import styles from "../../styles/pages/Storytellers.module.scss";
 import { withAuthSSR } from "../../utils/withAuthSSR";
 import { useAuth } from "@/contexts/AuthContext";
 import CreateStorytellerModal from "@/components/CreateStorytellerModal";
+import EditStorytellerModal from "@/components/EditStorytellerModal";
 
 export const getServerSideProps = withAuthSSR();
 
@@ -21,19 +22,21 @@ export default function StorytellersPage() {
   const [storytellers, setStorytellers] = useState<Storyteller[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [selected, setSelected] = useState<Storyteller | null>(null);
+
+  const fetchStorytellers = async () => {
+    try {
+      const res = await api.get("/storytellers");
+      setStorytellers(res.data);
+    } catch (err) {
+      console.error("Error fetching storytellers:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     setIsLoggedIn(true);
-    const fetchStorytellers = async () => {
-      try {
-        const res = await api.get("/storytellers");
-        setStorytellers(res.data);
-      } catch (err) {
-        console.error("Error fetching storytellers:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchStorytellers();
   }, []);
 
@@ -61,12 +64,13 @@ export default function StorytellersPage() {
             <p><strong>Visual Style:</strong> {s.visual_style}</p>
             <p className={styles.plot}><strong>Setup:</strong> {s.plot_setup}</p>
             <div className={styles.actions}>
-              <button onClick={() => alert("Edit modal coming soon!")}>✏️ Edit</button>
+              <button onClick={() => setSelected(s)}>✏️ Edit</button>
               <button onClick={() => handleDelete(s.id)}>🗑 Delete</button>
             </div>
           </div>
         ))}
       </div>
+
       <button className={styles.createBtn} onClick={() => setShowCreateModal(true)}>
         ➕ Create New Storyteller
       </button>
@@ -74,7 +78,15 @@ export default function StorytellersPage() {
       {showCreateModal && (
         <CreateStorytellerModal
           onClose={() => setShowCreateModal(false)}
-          onCreated={() => window.location.reload()} // Or re-fetch state more cleanly
+          onCreated={fetchStorytellers}
+        />
+      )}
+
+      {selected && (
+        <EditStorytellerModal
+          storyteller={selected}
+          onClose={() => setSelected(null)}
+          onUpdated={fetchStorytellers}
         />
       )}
     </div>
