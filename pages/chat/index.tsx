@@ -18,10 +18,33 @@ export default function ChatPage() {
   const [isLoadingStory, setIsLoadingStory] = useState(false);
   const [isLoadingImage, setIsLoadingImage] = useState(false);
   const [activeImage, setActiveImage] = useState<string | null>(null);
-
   const isLoading = isLoadingStory || isLoadingImage;
 
+  // Story setup
+  const [hasStarted, setHasStarted] = useState(false);
+  const [storyteller, setStoryteller] = useState<any>(null);
+  const [character, setCharacter] = useState<any>(null);
+  const [storytellers, setStorytellers] = useState<any[]>([]);
+  const [characters, setCharacters] = useState<any[]>([]);
+
   useEffect(() => {
+    setIsLoggedIn(true);
+
+    const fetchOptions = async () => {
+      try {
+        const [sRes, cRes] = await Promise.all([
+          api.get("/storytellers"),
+          api.get("/characters"),
+        ]);
+        setStorytellers(sRes.data);
+        setCharacters(cRes.data);
+      } catch (err) {
+        console.error("Error fetching options:", err);
+      }
+    };
+
+    fetchOptions();
+
     const handleImageClick = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (typeof detail === "string") {
@@ -29,12 +52,49 @@ export default function ChatPage() {
       }
     };
 
-    //set context logged in true because the SSR succeeded.
-    setIsLoggedIn(true)
-    
     window.addEventListener("imageClick", handleImageClick);
     return () => window.removeEventListener("imageClick", handleImageClick);
   }, []);
+
+  const handleStartStory = async () => {
+    if (!storyteller || !character) return;
+
+    const prompt = `Begin an immersive RPG story. The storyteller is titled "${storyteller.title}" with a ${storyteller.tone} tone and ${storyteller.genre} genre. The story begins with the character "${character.name}", whose role is ${character.role}, traits are ${character.traits}, and has the backstory: ${character.backstory}. Start the adventure with a cinematic opening.`;
+
+    try {
+      setIsLoadingStory(true);
+
+      const storyRes = await api.post("/generate_story", {
+        message: prompt,
+        context: [],
+      });
+
+      const storyText = storyRes.data.response;
+      const newContext = [
+        { role: "user", content: prompt },
+        { role: "assistant", content: storyText },
+      ];
+
+      const imageRes = await api.post("/generate_image", {
+        prompt: storyText,
+      });
+
+      const imageURL = imageRes.data.image_url;
+      const finalImage = imageURL === "TEST_MODE" ? "/test_wizard.png" : imageURL;
+
+      setMessages([
+        { sender: "ai", text: storyText },
+        { sender: "ai", text: "🎨 Scene:", image: finalImage },
+      ]);
+      setContext(newContext);
+      setHasStarted(true);
+    } catch (err) {
+      console.error("Failed to start story:", err);
+    } finally {
+      setIsLoadingStory(false);
+      setIsLoadingImage(false);
+    }
+  };
 
   const sendMessage = async (text: string) => {
     setMessages((prev) => [...prev, { sender: "user", text }]);
@@ -88,6 +148,57 @@ export default function ChatPage() {
       setIsLoadingImage(false);
     }
   };
+
+  if (!hasStarted) {
+    return (
+      <main className={styles.main}>
+        <div className={styles.selectorBox}>
+          <h2>🎭 Choose Your Story Setup</h2>
+
+          <div className={styles.selectionGrid}>
+            <h3>📖 Select a Storyteller</h3>
+            <div className={styles.grid}>
+              {storytellers.map((s) => (
+                <div
+                  key={s.id}
+                  className={`${styles.card} ${storyteller?.id === s.id ? styles.selected : ""}`}
+                  onClick={() => setStoryteller(s)}
+                >
+                  <h4>{s.title}</h4>
+                  <p>{s.genre} • {s.tone}</p>
+                </div>
+              ))}
+            </div>
+
+            <h3>🧝 Select a Character</h3>
+            <div className={styles.grid}>
+              {characters.map((c) => (
+                <div
+                  key={c.id}
+                  className={`${styles.card} ${character?.id === c.id ? styles.selected : ""}`}
+                  onClick={() => setCharacter(c)}
+                >
+                  <h4>{c.name}</h4>
+                  <p>{c.role} • {c.traits}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {storyteller && character && (
+            <div className={styles.summary}>
+              <p><strong>🧙 Storyteller:</strong> {storyteller.title}</p>
+              <p><strong>🧝 Character:</strong> {character.name}</p>
+              <button onClick={handleStartStory} className={styles.startBtn}>
+                🚀 Begin Story with 1 💎
+              </button>
+            </div>
+          )}
+        </div>
+      </main>
+    );
+  }
+
 
   return (
     <main className={styles.main}>
