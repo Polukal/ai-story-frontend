@@ -69,11 +69,20 @@ export default function Navbar() {
           </Link>
 
           <div className={styles.right}>
-            {isLoggedIn && credits !== null && (
-              <div className={styles.credits}>
-                <div className={styles.purple_emoji}>💎</div> {credits}
-                <button className={styles.plus} onClick={() => setShowCreditModal(true)}>+</button>
-              </div>
+            {isLoggedIn && (
+              <>
+                <div className={styles.navLinks}>
+                  <Link href="/characters" className={styles.linkBtn}>🧝 Characters</Link>
+                  <Link href="/storytellers" className={styles.linkBtn}>📖 Storytellers</Link>
+                </div>
+
+                {credits !== null && (
+                  <div className={styles.credits}>
+                    <div className={styles.purple_emoji}>💎</div> {credits}
+                    <button className={styles.plus} onClick={() => setShowCreditModal(true)}>+</button>
+                  </div>
+                )}
+              </>
             )}
 
             <div className={styles.avatarWrapper} ref={dropdownRef}>
@@ -103,7 +112,6 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Modal */}
       {showCreditModal && <CreditModal onClose={() => setShowCreditModal(false)} />}
     </>
   );

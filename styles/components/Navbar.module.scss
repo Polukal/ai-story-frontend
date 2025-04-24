@@ -142,3 +142,23 @@
     font-size: 1.25rem;
   }
   
+
+  .linkBtn {
+    margin-right: 1.5rem;
+    color: white;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+  
+  .navLinks {
+    display: flex;
+    align-items: center;
+    margin-right: 1.5rem;
+    gap: 1rem;
+  }
+  
