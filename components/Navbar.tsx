@@ -74,6 +74,7 @@ export default function Navbar() {
                 <div className={styles.navLinks}>
                   <Link href="/characters" className={styles.linkBtn}>🧝 Characters</Link>
                   <Link href="/storytellers" className={styles.linkBtn}>📖 Storytellers</Link>
+                  <Link href="/chat" className={styles.linkBtn}>🧙‍♂️ Enter the Realm</Link>
                 </div>
 
                 {credits !== null && (
