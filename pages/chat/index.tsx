@@ -1,13 +1,13 @@
+import { useState, useEffect } from "react";
 import ChatWindow from "../../components/ChatWindow";
 import ChatInput from "../../components/ChatInput";
+import ImageModal from "../../components/ImageModal";
 import styles from "../../styles/chat/ChatPage.module.scss";
 import chatStyles from "../../styles/chat/components/ChatWindow.module.scss";
-import ImageModal from "../../components/ImageModal";
-import { useState, useEffect } from "react";
-import { Message } from "../../types/message";
 import api from "../../utils/api";
 import { withAuthSSR } from "../../utils/withAuthSSR";
 import { useAuth } from "@/contexts/AuthContext";
+import { Message } from "../../types/message";
 
 export const getServerSideProps = withAuthSSR();
 
@@ -20,7 +20,6 @@ export default function ChatPage() {
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const isLoading = isLoadingStory || isLoadingImage;
 
-  // Story setup
   const [hasStarted, setHasStarted] = useState(false);
   const [storyteller, setStoryteller] = useState<any>(null);
   const [character, setCharacter] = useState<any>(null);
@@ -80,7 +79,7 @@ export default function ChatPage() {
       });
 
       const imageURL = imageRes.data.image_url;
-      const finalImage = imageURL === "TEST_MODE" ? "/test_wizard.png" : imageURL;
+      const finalImage = imageURL === "TEST_MODE" ? "/avatar_wizard.png" : imageURL;
 
       setMessages([
         { sender: "ai", text: storyText },
@@ -128,8 +127,7 @@ export default function ChatPage() {
 
       setIsLoadingImage(false);
       const imageURL = imageRes.data.image_url;
-      const finalImageUrl =
-        imageURL === "TEST_MODE" ? "/test_wizard.png" : imageURL;
+      const finalImageUrl = imageURL === "TEST_MODE" ? "/avatar_wizard.png" : imageURL;
 
       setMessages((prev) => {
         const updated = [...prev];
@@ -164,8 +162,13 @@ export default function ChatPage() {
                   className={`${styles.card} ${storyteller?.id === s.id ? styles.selected : ""}`}
                   onClick={() => setStoryteller(s)}
                 >
-                  <h4>{s.title}</h4>
-                  <p>{s.genre} • {s.tone}</p>
+                  <div className={styles.cardContent}>
+                    <img src="/avatar_wizard.png" className={styles.cardImage} alt="Storyteller" />
+                    <div>
+                      <h4>{s.title}</h4>
+                      <p>{s.genre} • {s.tone}</p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -180,8 +183,13 @@ export default function ChatPage() {
                   className={`${styles.card} ${character?.id === c.id ? styles.selected : ""}`}
                   onClick={() => setCharacter(c)}
                 >
-                  <h4>{c.name}</h4>
-                  <p>{c.role} • {c.traits}</p>
+                  <div className={styles.cardContent}>
+                    <img src="/avatar_wizard.png" className={styles.cardImage} alt="Character" />
+                    <div>
+                      <h4>{c.name}</h4>
+                      <p>{c.role} • {c.traits}</p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -192,10 +200,16 @@ export default function ChatPage() {
           <div className={styles.startBox}>
             <div className={styles.startRow}>
               <div className={styles.infoCard}>
+                <img src="/avatar_wizard.png" className={styles.imageBottom} alt="Storyteller" />
+                <div className={styles.selectedBoxBottom}>
                 <strong>🧙 Storyteller:</strong> {storyteller.title}
+                </div>
               </div>
               <div className={styles.infoCard}>
+                <img src="/avatar_wizard.png" className={styles.imageBottom} alt="Character" />
+                <div className={styles.selectedBoxBottom}>
                 <strong>🧝 Character:</strong> {character.name}
+                </div>
               </div>
               <button onClick={handleStartStory} className={styles.startBtn}>
                 🚀 Begin Story with 1 💎
@@ -203,12 +217,9 @@ export default function ChatPage() {
             </div>
           </div>
         )}
-
       </main>
     );
   }
-
-
 
   return (
     <main className={styles.main}>
