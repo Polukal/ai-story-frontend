@@ -155,9 +155,9 @@ export default function ChatPage() {
         <div className={styles.selectorBox}>
           <h2>🎭 Choose Your Story Setup</h2>
 
-          <div className={styles.selectionGrid}>
+          <div className={styles.horizontalSection}>
             <h3>📖 Select a Storyteller</h3>
-            <div className={styles.grid}>
+            <div className={styles.horizontalScroll}>
               {storytellers.map((s) => (
                 <div
                   key={s.id}
@@ -169,9 +169,11 @@ export default function ChatPage() {
                 </div>
               ))}
             </div>
+          </div>
 
+          <div className={styles.horizontalSection}>
             <h3>🧝 Select a Character</h3>
-            <div className={styles.grid}>
+            <div className={styles.horizontalScroll}>
               {characters.map((c) => (
                 <div
                   key={c.id}
@@ -184,20 +186,28 @@ export default function ChatPage() {
               ))}
             </div>
           </div>
+        </div>
 
-          {storyteller && character && (
-            <div className={styles.summary}>
-              <p><strong>🧙 Storyteller:</strong> {storyteller.title}</p>
-              <p><strong>🧝 Character:</strong> {character.name}</p>
+        {storyteller && character && (
+          <div className={styles.startBox}>
+            <div className={styles.startRow}>
+              <div className={styles.infoCard}>
+                <strong>🧙 Storyteller:</strong> {storyteller.title}
+              </div>
+              <div className={styles.infoCard}>
+                <strong>🧝 Character:</strong> {character.name}
+              </div>
               <button onClick={handleStartStory} className={styles.startBtn}>
                 🚀 Begin Story with 1 💎
               </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
       </main>
     );
   }
+
 
 
   return (

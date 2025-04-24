@@ -1,13 +1,14 @@
 .main {
   color: #ffffff;
   height: 100vh;
-  padding: 1rem 1rem 1rem 1rem;
-  max-width: 800px;
+  padding: 1rem;
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
   width: 100%;
+  margin: 0 auto;
 }
 
 .title {
@@ -21,7 +22,6 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0;
 }
 .title img {
   height: 2.5rem;
@@ -31,38 +31,56 @@
   background: #1e103f;
   padding: 2rem;
   border-radius: 1.5rem;
+  width: 100%;
   max-width: 1200px;
-  margin: 4rem auto;
+  margin-top: 4rem;
   color: #f3e8ff;
   box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
   text-align: center;
   animation: fadeIn 0.6s ease;
 }
 
-.selectionGrid {
-  margin-top: 1.5rem;
+.horizontalSection {
+  margin: 2rem 0;
 }
-.selectionGrid h3 {
-  margin: 1.5rem 0 0.5rem;
+.horizontalSection h3 {
   font-size: 1.25rem;
   color: #e0bdfd;
+  margin-bottom: 1rem;
+  text-align: left;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+.horizontalScroll {
+  display: flex;
   gap: 1rem;
-  margin-bottom: 1rem;
+  overflow-x: auto;
+  padding: 1rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+.horizontalScroll::-webkit-scrollbar {
+  height: 8px;
+}
+.horizontalScroll::-webkit-scrollbar-thumb {
+  background-color: #7e22ce;
+  border-radius: 4px;
+}
+.horizontalScroll::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .card {
+  min-width: 200px;
+  flex-shrink: 0;
   background: #2e185b;
   padding: 1rem;
   border-radius: 1rem;
   border: 2px solid transparent;
   cursor: pointer;
   transition: all 0.2s ease;
+  scroll-snap-align: start;
   box-shadow: 0 0 8px rgba(128, 90, 213, 0.2);
+  text-align: center;
 }
 .card h4 {
   margin: 0;
@@ -84,30 +102,51 @@
   background: linear-gradient(to right, #3b0a64, #4c1d95);
 }
 
-.summary {
-  margin-top: 2rem;
-  background: #371a64;
-  padding: 1rem;
+.startBox {
+  background: #30105a;
+  margin: 2rem auto;
+  padding: 1.5rem 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 25px rgba(192, 132, 252, 0.4);
+  width: 100%;
+  max-width: 1200px;
+}
+
+.startRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.infoCard {
+  background: #3d1a75;
+  color: #e9d5ff;
+  padding: 0.8rem 1.4rem;
   border-radius: 0.8rem;
-  box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+  font-size: 1rem;
+  flex: 1;
+  min-width: 180px;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.3);
 }
 
 .startBtn {
-  margin-top: 1.2rem;
-  padding: 0.85rem 2.5rem;
+  padding: 0.9rem 2.2rem;
   background: linear-gradient(to right, #8b5cf6, #c084fc);
   color: white;
   border: none;
   font-size: 1.1rem;
   font-weight: 600;
-  border-radius: 0.7rem;
+  border-radius: 0.8rem;
   cursor: pointer;
-  box-shadow: 0 0 15px rgba(192, 132, 252, 0.5);
+  box-shadow: 0 0 15px rgba(192, 132, 252, 0.6);
   transition: all 0.2s ease;
 }
 .startBtn:hover {
-  transform: scale(1.04);
-  box-shadow: 0 0 25px rgba(192, 132, 252, 0.7);
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.9);
 }
 
 @keyframes fadeIn {
