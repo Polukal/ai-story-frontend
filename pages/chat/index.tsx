@@ -57,20 +57,18 @@ export default function ChatPage() {
 
   const handleStartStory = async () => {
     if (!storyteller || !character) return;
-
-    const prompt = `Begin an immersive RPG story. The storyteller is titled "${storyteller.title}" with a ${storyteller.tone} tone and ${storyteller.genre} genre. The story begins with the character "${character.name}", whose role is ${character.role}, traits are ${character.traits}, and has the backstory: ${character.backstory}. Start the adventure with a cinematic opening.`;
+    setIsLoadingStory(true);
 
     try {
-      setIsLoadingStory(true);
-
       const storyRes = await api.post("/generate_story", {
-        message: prompt,
         context: [],
+        storyteller,
+        character,
       });
 
       const storyText = storyRes.data.response;
       const newContext = [
-        { role: "user", content: prompt },
+        { role: "user", content: "__START__" },
         { role: "assistant", content: storyText },
       ];
 
@@ -91,7 +89,6 @@ export default function ChatPage() {
       console.error("Failed to start story:", err);
     } finally {
       setIsLoadingStory(false);
-      setIsLoadingImage(false);
     }
   };
 
@@ -160,7 +157,7 @@ export default function ChatPage() {
                 <div
                   key={s.id}
                   className={`${styles.card} ${storyteller?.id === s.id ? styles.selected : ""}`}
-                  onClick={() => setStoryteller(s)}
+                  onClick={() => !isLoadingStory && setStoryteller(s)}
                 >
                   <div className={styles.cardContent}>
                     <img src="/avatar_wizard.png" className={styles.cardImage} alt="Storyteller" />
@@ -181,7 +178,7 @@ export default function ChatPage() {
                 <div
                   key={c.id}
                   className={`${styles.card} ${character?.id === c.id ? styles.selected : ""}`}
-                  onClick={() => setCharacter(c)}
+                  onClick={() => !isLoadingStory && setCharacter(c)}
                 >
                   <div className={styles.cardContent}>
                     <img src="/avatar_wizard.png" className={styles.cardImage} alt="Character" />
@@ -202,17 +199,21 @@ export default function ChatPage() {
               <div className={styles.infoCard}>
                 <img src="/avatar_wizard.png" className={styles.imageBottom} alt="Storyteller" />
                 <div className={styles.selectedBoxBottom}>
-                <strong>🧙 Storyteller:</strong> {storyteller.title}
+                  <strong>🧙 Storyteller:</strong> {storyteller.title}
                 </div>
               </div>
               <div className={styles.infoCard}>
                 <img src="/avatar_wizard.png" className={styles.imageBottom} alt="Character" />
                 <div className={styles.selectedBoxBottom}>
-                <strong>🧝 Character:</strong> {character.name}
+                  <strong>🧝 Character:</strong> {character.name}
                 </div>
               </div>
-              <button onClick={handleStartStory} className={styles.startBtn}>
-                🚀 Begin Story with 1 💎
+              <button
+                onClick={handleStartStory}
+                className={styles.startBtn}
+                disabled={isLoadingStory}
+              >
+                {isLoadingStory ? "Loading..." : "🚀 Begin Story with 1 💎"}
               </button>
             </div>
           </div>
