@@ -1,0 +1,70 @@
+.storytellersContainer {
+  padding: 3rem;
+  color: white;
+}
+.storytellersContainer h1 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.card {
+  background: #2d2148;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(130, 0, 200, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.card h2 {
+  font-size: 1.4rem;
+  color: #d8b4fe;
+}
+.card .plot {
+  font-style: italic;
+  color: #a78bfa;
+}
+.card .actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+.card .actions button {
+  padding: 0.5rem 1rem;
+  background-color: #4b2c70;
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  cursor: pointer;
+}
+.card .actions button:hover {
+  background-color: #6d3bbf;
+}
+
+.createBtn {
+  display: block;
+  margin: 2rem auto 0;
+  background-color: #5c2f8e;
+  padding: 1rem 2rem;
+  border: none;
+  color: white;
+  border-radius: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.createBtn:hover {
+  background-color: #7d40d0;
+}
+
+.loading {
+  padding: 3rem;
+  text-align: center;
+  font-size: 1.2rem;
+}/*# sourceMappingURL=Storytellers.module.css.map */

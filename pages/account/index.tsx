@@ -3,6 +3,7 @@ import api from "../../utils/api";
 import styles from "../../styles/pages/Account.module.scss";
 import { withAuthSSR } from "../../utils/withAuthSSR";
 import { useAuth } from "@/contexts/AuthContext";
+import Link from "next/link";
 
 export const getServerSideProps = withAuthSSR();
 
@@ -48,8 +49,12 @@ export default function AccountPage() {
         <div className={styles.equipmentSection}>
           <h3>Actions</h3>
           <div className={styles.equipmentGrid}>
-            <div className={styles.eqIcon}>🧝<span>Player Characters</span></div>
-            <div className={styles.eqIcon}>📖<span>Storytellers</span></div>
+            <Link href="/characters" className={styles.eqIcon}>
+              🧝<span>Player Characters</span>
+            </Link>
+            <Link href="/storytellers" className={styles.eqIcon}>
+              📖<span>Storytellers</span>
+            </Link>
             <div className={styles.eqIcon}>🔒<span>Change Password</span></div>
             <div className={styles.eqIcon}>💬<span>Support</span></div>
           </div>

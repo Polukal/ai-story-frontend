@@ -1,0 +1,132 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modalContent {
+  background: #2d2148;
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 0 20px rgba(130, 0, 200, 0.4);
+  color: white;
+}
+.modalContent h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #d8b4fe;
+}
+.modalContent .input,
+.modalContent .textarea,
+.modalContent .select {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #3c2d56;
+  color: white;
+  padding-right: 3.5rem;
+}
+.modalContent .input::-moz-placeholder, .modalContent .textarea::-moz-placeholder, .modalContent .select::-moz-placeholder {
+  color: #ccc;
+}
+.modalContent .input::placeholder,
+.modalContent .textarea::placeholder,
+.modalContent .select::placeholder {
+  color: #ccc;
+}
+.modalContent .error {
+  color: #f87171;
+  margin-bottom: 1rem;
+}
+.modalContent .actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.modalContent .actions button {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #6b21a8;
+  color: white;
+}
+.modalContent .actions button:hover {
+  background: #7e22ce;
+}
+.modalContent .actions .cancelBtn {
+  background: #4b2c70;
+}
+.modalContent .actions .cancelBtn:hover {
+  background: #5c2f8e;
+}
+
+.label {
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+  display: block;
+  color: #dcd1f4;
+}
+
+.formControl {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 0.8rem;
+  background: #3c2d56;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+.input::-moz-placeholder, .select::-moz-placeholder, .textarea::-moz-placeholder {
+  color: #ccc;
+}
+.input::placeholder,
+.select::placeholder,
+.textarea::placeholder {
+  color: #ccc;
+}
+
+.customInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  position: relative;
+}
+
+.cancelX {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  position: absolute;
+  right: 1rem;
+  background: linear-gradient(90deg, #f73434, #f73434);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.cancelX:hover {
+  background: linear-gradient(90deg, #fcb3b3, #fcb3b3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}/*# sourceMappingURL=CreateStorytellerModal.module.css.map */

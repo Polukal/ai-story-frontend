@@ -127,3 +127,22 @@
   text-align: center;
   color: white;
 }
+
+
+.eqIcon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+
+  span {
+    font-size: 1rem;
+  }
+
+  &:hover {
+    color: #d8b4fe;
+  }
+}
