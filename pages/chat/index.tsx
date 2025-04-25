@@ -8,6 +8,7 @@ import api from "../../utils/api";
 import { withAuthSSR } from "../../utils/withAuthSSR";
 import { useAuth } from "@/contexts/AuthContext";
 import { Message } from "../../types/message";
+import CreditModal from "@/components/CreditModal";
 
 export const getServerSideProps = withAuthSSR();
 
@@ -19,6 +20,7 @@ export default function ChatPage() {
   const [isLoadingImage, setIsLoadingImage] = useState(false);
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const isLoading = isLoadingStory || isLoadingImage;
+  const [showCreditModal, setShowCreditModal] = useState(false);
 
   const [hasStarted, setHasStarted] = useState(false);
   const [storyteller, setStoryteller] = useState<any>(null);
@@ -89,8 +91,18 @@ export default function ChatPage() {
       ]);
       setContext(newContext);
       setHasStarted(true);
-    } catch (err) {
-      console.error("Failed to start story:", err);
+    } catch (err: any) {
+      console.log(err.response.data.error)
+      if (
+        err?.response?.status === 403 &&
+        err?.response?.data?.error === "Insufficient credits"
+      ) {
+        setShowCreditModal(true);
+      }
+
+      else {
+        console.error("Failed to start story:", err);
+      }
     } finally {
       setIsLoadingStory(false);
     }
@@ -157,44 +169,54 @@ export default function ChatPage() {
           <div className={styles.horizontalSection}>
             <h3>📖 Select a Storyteller</h3>
             <div className={styles.horizontalScroll}>
-              {storytellers.map((s) => (
-                <div
-                  key={s.id}
-                  className={`${styles.card} ${storyteller?.id === s.id ? styles.selected : ""}`}
-                  onClick={() => !isLoadingStory && setStoryteller(s)}
-                >
-                  <div className={styles.cardContent}>
-                    <img src="/avatar_wizard.png" className={styles.cardImage} alt="Storyteller" />
-                    <div>
-                      <h4>{s.title}</h4>
-                      <p>{s.genre} • {s.tone}</p>
+              {storytellers.length === 0 ? (
+                <p className={styles.emptyMessage}>No Storyteller found</p>
+              ) : (
+                storytellers.map((s) => (
+                  <div
+                    key={s.id}
+                    className={`${styles.card} ${storyteller?.id === s.id ? styles.selected : ""}`}
+                    onClick={() => !isLoadingStory && setStoryteller(s)}
+                  >
+                    <div className={styles.cardContent}>
+                      <img src="/avatar_wizard.png" className={styles.cardImage} alt="Storyteller" />
+                      <div>
+                        <h4>{s.title}</h4>
+                        <p>{s.genre} • {s.tone}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
+
 
           <div className={styles.horizontalSection}>
             <h3>🧝 Select a Character</h3>
             <div className={styles.horizontalScroll}>
-              {characters.map((c) => (
-                <div
-                  key={c.id}
-                  className={`${styles.card} ${character?.id === c.id ? styles.selected : ""}`}
-                  onClick={() => !isLoadingStory && setCharacter(c)}
-                >
-                  <div className={styles.cardContent}>
-                    <img src="/avatar_wizard.png" className={styles.cardImage} alt="Character" />
-                    <div>
-                      <h4>{c.name}</h4>
-                      <p>{c.role} • {c.traits}</p>
+              {characters.length === 0 ? (
+                <p className={styles.emptyMessage}>No Character found</p>
+              ) : (
+                characters.map((c) => (
+                  <div
+                    key={c.id}
+                    className={`${styles.card} ${character?.id === c.id ? styles.selected : ""}`}
+                    onClick={() => !isLoadingStory && setCharacter(c)}
+                  >
+                    <div className={styles.cardContent}>
+                      <img src="/avatar_wizard.png" className={styles.cardImage} alt="Character" />
+                      <div>
+                        <h4>{c.name}</h4>
+                        <p>{c.role} • {c.traits}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
+
         </div>
 
         {storyteller && character && (
@@ -217,11 +239,12 @@ export default function ChatPage() {
                 className={styles.startBtn}
                 disabled={isLoadingStory}
               >
-                {isLoadingStory ? "Loading..." : "🚀 Begin Story with 1 💎"}
+                {isLoadingStory ? "Loading..." : "🚀 Begin Story with 5 💎"}
               </button>
             </div>
           </div>
         )}
+        {showCreditModal && <CreditModal onClose={() => setShowCreditModal(false)} />}
       </main>
     );
   }
@@ -260,5 +283,6 @@ export default function ChatPage() {
         setInputValue={setInputValue}
       />
     </main>
+
   );
 }

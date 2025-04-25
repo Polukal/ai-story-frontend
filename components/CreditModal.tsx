@@ -7,11 +7,11 @@ interface Props {
 }
 
 const creditTiers = [
-  { name: "Single Credit", credits: 1, price: 2.49 },
-  { name: "Starter Pack", credits: 3, price: 6.99 },
-  { name: "Adventurer Pack", credits: 10, price: 21.99 },
-  { name: "Hero Pack", credits: 25, price: 49.99 },
-  { name: "Legend Pack", credits: 50, price: 89.99 },
+  { name: "Starter Pack", credits: 5, price: 1.99 },
+  { name: "Adventurer Pack", credits: 15, price: 4.99 },
+  { name: "Hero Pack", credits: 30, price: 8.99 },
+  { name: "Legend Pack", credits: 60, price: 14.99 },
+  { name: "Mega Pack", credits: 120, price: 24.99 },
 ];
 
 export default function CreditModal({ onClose }: Props) {

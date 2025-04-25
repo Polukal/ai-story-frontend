@@ -17,8 +17,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json(response.data);
   } catch (error: any) {
     console.error('Story generation error:', error.response?.data || error.message);
-    return res.status(error.response?.status || 500).json({
-      message: error.response?.data?.message || 'Story generation failed',
+  
+    const status = error.response?.status || 500;
+    const data = error.response?.data || {};
+  
+    return res.status(status).json({
+      error: data.error || data.message || 'Story generation failed',
     });
   }
 }

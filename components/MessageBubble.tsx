@@ -4,15 +4,23 @@ import { Message } from "../types/message";
 interface Props extends Message {
   setInputValue: (value: string) => void;
   disabled: boolean;
+  isLastAiMessage: boolean;
 }
 
-export default function MessageBubble({ sender, text, image, setInputValue, disabled }: Props) {
+export default function MessageBubble({
+  sender,
+  text,
+  image,
+  setInputValue,
+  disabled,
+  isLastAiMessage
+}: Props) {
   // Replace **bold** with <strong>
   function parseMarkdown(input: string): string {
     return input.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
   }
 
-  // Extract choices & return [cleanedText, choices[]]
+  // Extract numbered choices and clean them from the main text
   function extractChoicesAndCleanText(text: string): [string, string[]] {
     const lines = text.split("\n");
     const choiceLines: string[] = [];
@@ -30,9 +38,11 @@ export default function MessageBubble({ sender, text, image, setInputValue, disa
     return [cleanedLines.join("\n"), choiceLines];
   }
 
+  // Run extraction only if AI message
   const [cleanedText, choices] =
     sender === "ai" ? extractChoicesAndCleanText(text) : [text, []];
 
+  // Special loading states
   if (text === "__loading__") {
     return (
       <div className={styles.loaderBubble}>
@@ -70,7 +80,7 @@ export default function MessageBubble({ sender, text, image, setInputValue, disa
           style={{ cursor: "pointer" }}
         />
       )}
-      {choices.length > 0 && (
+      {choices.length > 0 && isLastAiMessage && (
         <div className={styles.choiceButtons}>
           {choices.map((choice, index) => (
             <button
@@ -78,9 +88,8 @@ export default function MessageBubble({ sender, text, image, setInputValue, disa
               className={styles.choiceButton}
               onClick={() => setInputValue(choice)}
               disabled={disabled}
-            >
-              {choice}
-            </button>
+              dangerouslySetInnerHTML={{ __html: parseMarkdown(choice) }}
+            />
           ))}
         </div>
       )}

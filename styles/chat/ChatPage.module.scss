@@ -234,3 +234,10 @@
     box-shadow: 0 0 8px rgba(128, 90, 213, 0.3);
   }
 }
+
+.emptyMessage {
+  color: #ccc;
+  font-style: italic;
+  padding: 1rem;
+  white-space: nowrap;
+}

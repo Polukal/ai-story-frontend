@@ -4,11 +4,11 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 const creditTiers = {
-  1: { label: "Single Credit", price: 249 },
-  3: { label: "Starter Pack", price: 699 },
-  10: { label: "Adventurer Pack", price: 2199 },
-  25: { label: "Hero Pack", price: 4999 },
-  50: { label: "Legend Pack", price: 8999 },
+  5:   { label: "Starter Pack", price: 199 },
+  15:  { label: "Adventurer Pack", price: 499 },
+  30:  { label: "Hero Pack", price: 899 },
+  60:  { label: "Legend Pack", price: 1499 },
+  120: { label: "Mega Pack", price: 2499 },
 } as const;
 
 type CreditAmount = keyof typeof creditTiers;

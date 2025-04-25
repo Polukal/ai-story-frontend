@@ -19,9 +19,22 @@ export default function ChatWindow({ messages, disabled, inputValue, setInputVal
 
   return (
     <div className={styles.container}>
-      {messages.map((msg, index) => (
-        <MessageBubble disabled={disabled} key={index} {...msg} setInputValue={setInputValue} />
-      ))}
+      {messages.map((msg, index) => {
+        const isLastAiMessage =
+          msg.sender === "ai" &&
+          index === messages.length - 1 &&
+          !messages[messages.length - 1].image;
+
+        return (
+          <MessageBubble
+            key={index}
+            {...msg}
+            setInputValue={setInputValue}
+            disabled={disabled}
+            isLastAiMessage={isLastAiMessage}
+          />
+        );
+      })}
       <div ref={bottomRef} />
     </div>
   );
