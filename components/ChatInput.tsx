@@ -1,20 +1,22 @@
-import { useState } from "react";
 import styles from "../styles/chat/components/ChatInput.module.scss";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
-  disabled?: boolean;
+  disabled: boolean;
+  inputValue: string;
+  setInputValue: (value: string) => void;
 }
 
-export default function ChatInput({ onSend, disabled }: ChatInputProps) {
-  const [input, setInput] = useState("");
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (input.trim()) {
-      onSend(input);
-      setInput("");
-    }
+export default function ChatInput({
+  onSend,
+  disabled,
+  inputValue,
+  setInputValue,
+}: ChatInputProps) {
+  const handleSubmit = () => {
+    if (!inputValue.trim()) return;
+    onSend(inputValue);
+    setInputValue(""); // Clear input after sending
   };
 
   return (
@@ -22,12 +24,12 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
       <input
         type="text"
         placeholder="Continue the story..."
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
         className={styles.input}
         disabled={disabled}
       />
-      <button type="submit" className={styles.button} disabled={disabled}>
+      <button onClick={handleSubmit} className={styles.button} disabled={disabled}>
         Send
       </button>
     </form>

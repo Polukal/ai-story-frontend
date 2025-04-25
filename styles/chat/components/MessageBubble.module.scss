@@ -90,3 +90,25 @@
 .response_text{
   text-align: left;
 }
+
+.choiceButtons {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.choiceButton {
+  background: #6d28d9;
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #7c3aed;
+  }
+}

@@ -26,6 +26,8 @@ export default function ChatPage() {
   const [storytellers, setStorytellers] = useState<any[]>([]);
   const [characters, setCharacters] = useState<any[]>([]);
 
+  const [inputValue, setInputValue] = useState("");
+
   useEffect(() => {
     setIsLoggedIn(true);
 
@@ -242,10 +244,21 @@ export default function ChatPage() {
         </div>
       </div>
       <div className={`${chatStyles.container} ${isLoading ? chatStyles.loadingBorder : ""}`}>
-        <ChatWindow messages={messages} />
+        <ChatWindow
+          messages={messages}
+          disabled={isLoading}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
+        />
+
       </div>
       {activeImage && <ImageModal imageUrl={activeImage} onClose={() => setActiveImage(null)} />}
-      <ChatInput onSend={sendMessage} disabled={isLoading} />
+      <ChatInput
+        onSend={sendMessage}
+        disabled={isLoading}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+      />
     </main>
   );
 }
