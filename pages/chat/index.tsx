@@ -74,6 +74,8 @@ export default function ChatPage() {
 
       const imageRes = await api.post("/generate_image", {
         prompt: storyText,
+        storyteller,
+        character,
       });
 
       const imageURL = imageRes.data.image_url;
