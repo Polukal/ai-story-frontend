@@ -23,6 +23,7 @@ export default function CharactersPage() {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selected, setSelected] = useState<Character | null>(null);
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const fetchCharacters = async () => {
     try {
@@ -60,7 +61,7 @@ export default function CharactersPage() {
           <div key={c.id} className={styles.card}>
             {/* Always show an image — real or default */}
             <img
-              src={c.image_url || "/avatar_wizard.png"}
+              src={c.image_url ? `${backendUrl}${c.image_url}` : "/avatar_wizard.png"}
               alt={c.name}
               className={styles.characterImage}
             />

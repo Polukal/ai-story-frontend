@@ -24,6 +24,7 @@ export default function StorytellersPage() {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selected, setSelected] = useState<Storyteller | null>(null);
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const fetchStorytellers = async () => {
     try {
@@ -59,12 +60,12 @@ export default function StorytellersPage() {
       <div className={styles.grid}>
         {storytellers.map((s) => (
           <div key={s.id} className={styles.card}>
-            {/* If there's an image, show it */}
-            {s.image_url ? (
-              <img src={s.image_url} alt={s.title} className={styles.cardImage} />
-            ) : (
-              <img src="/avatar_wizard.png" alt="Default Avatar" className={styles.cardImage} />
-            )}
+            {/* Always show an image — real or default */}
+            <img
+              src={s.image_url ? `${backendUrl}${s.image_url}` : "/avatar_wizard.png"}
+              alt={s.title}
+              className={styles.characterImage}
+            />
 
             <h2>{s.title}</h2>
             <p><strong>Genre:</strong> {s.genre}</p>
