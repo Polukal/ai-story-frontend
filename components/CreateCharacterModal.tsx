@@ -17,6 +17,7 @@ export default function CreateCharacterModal({ onClose, onCreated }: Props) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,8 +30,24 @@ export default function CreateCharacterModal({ onClose, onCreated }: Props) {
     }
 
     setLoading(true);
+    setError("");
+
     try {
-      await api.post("/characters", formData);
+      const data = new FormData();
+      data.append("name", formData.name);
+      data.append("role", formData.role);
+      data.append("traits", formData.traits);
+      data.append("backstory", formData.backstory);
+      if (imageFile) {
+        data.append("image", imageFile);
+      }
+
+      await api.post("/characters", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
       onCreated();
       onClose();
     } catch (err: any) {
@@ -91,6 +108,15 @@ export default function CreateCharacterModal({ onClose, onCreated }: Props) {
             rows={4}
             value={formData.backstory}
             onChange={handleChange}
+          />
+        </div>
+
+        <div className={styles.formControl}>
+          <label className={styles.label}>Character Picture</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImageFile(e.target.files?.[0] || null)}
           />
         </div>
 

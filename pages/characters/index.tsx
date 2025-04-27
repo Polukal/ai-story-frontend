@@ -14,6 +14,7 @@ type Character = {
   role: string;
   traits: string;
   backstory: string;
+  image_url?: string;
 };
 
 export default function CharactersPage() {
@@ -57,6 +58,12 @@ export default function CharactersPage() {
       <div className={styles.grid}>
         {characters.map((c) => (
           <div key={c.id} className={styles.card}>
+            {/* Always show an image — real or default */}
+            <img
+              src={c.image_url || "/avatar_wizard.png"}
+              alt={c.name}
+              className={styles.characterImage}
+            />
             <h2>{c.name}</h2>
             <p><strong>Role:</strong> {c.role}</p>
             <p><strong>Traits:</strong> {c.traits}</p>

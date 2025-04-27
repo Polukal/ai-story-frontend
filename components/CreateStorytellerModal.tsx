@@ -12,13 +12,11 @@ type Props = {
 };
 
 export default function CreateStorytellerModal({ onClose, onCreated }: Props) {
-
     const { setIsLoggedIn } = useAuth();
-
     useEffect(() => {
-        //set context logged in true because the SSR succeeded.
-        setIsLoggedIn(true)
+        setIsLoggedIn(true);
     }, []);
+
     const [formData, setFormData] = useState({
         title: "",
         genre: "",
@@ -27,12 +25,12 @@ export default function CreateStorytellerModal({ onClose, onCreated }: Props) {
         visual_style: "",
     });
 
+    const [imageFile, setImageFile] = useState<File | null>(null);
     const [custom, setCustom] = useState({
         genre: false,
         tone: false,
         visual_style: false,
     });
-
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -50,7 +48,6 @@ export default function CreateStorytellerModal({ onClose, onCreated }: Props) {
         }
     };
 
-
     const handleCancelCustom = (field: keyof typeof custom) => {
         setCustom({ ...custom, [field]: false });
         setFormData({ ...formData, [field]: "" });
@@ -63,8 +60,21 @@ export default function CreateStorytellerModal({ onClose, onCreated }: Props) {
         }
 
         setLoading(true);
+        setError("");
+
         try {
-            await api.post("/storytellers", formData);
+            const data = new FormData();
+            Object.entries(formData).forEach(([key, value]) => {
+                data.append(key, value);
+            });
+            if (imageFile) {
+                data.append("image", imageFile);
+            }
+
+            await api.post("/storytellers", data, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
             onCreated();
             onClose();
         } catch (err: any) {
@@ -96,90 +106,43 @@ export default function CreateStorytellerModal({ onClose, onCreated }: Props) {
                     />
                 </div>
 
-                <div className={styles.formControl}>
-                    <label className={styles.label}>Genre</label>
-                    {!custom.genre ? (
-                        <select
-                            className={styles.select}
-                            onChange={(e) => handleSelect("genre", e.target.value)}
-                            value={formData.genre}
-                        >
-                            <option value="">Select Genre</option>
-                            {genreOptions.map((option) => (
-                                <option key={option} value={option}>{option}</option>
-                            ))}
-                        </select>
-                    ) : (
-                        <div className={styles.customInputWrapper}>
-                            <input
-                                type="text"
-                                name="genre"
-                                placeholder="Your Custom Genre"
-                                className={styles.input}
-                                value={formData.genre}
-                                onChange={handleChange}
-                            />
-                            <button onClick={() => handleCancelCustom("genre")} className={styles.cancelX}>❌</button>
-                        </div>
-                    )}
-                </div>
+                {/* Genre, Tone, Visual Style Selects */}
+                {["genre", "tone", "visual_style"].map((field) => {
+                    const options = { genre: genreOptions, tone: toneOptions, visual_style: visualOptions }[field]!;
+                    const isCustom = custom[field as keyof typeof custom];
 
-                <div className={styles.formControl}>
-                    <label className={styles.label}>Tone</label>
-                    {!custom.tone ? (
-                        <select
-                            className={styles.select}
-                            onChange={(e) => handleSelect("tone", e.target.value)}
-                            value={formData.tone}
-                        >
-                            <option value="">Select Tone</option>
-                            {toneOptions.map((option) => (
-                                <option key={option} value={option}>{option}</option>
-                            ))}
-                        </select>
-                    ) : (
-                        <div className={styles.customInputWrapper}>
-                            <input
-                                type="text"
-                                name="tone"
-                                placeholder="Your Custom Tone"
-                                className={styles.input}
-                                value={formData.tone}
-                                onChange={handleChange}
-                            />
-                            <button onClick={() => handleCancelCustom("tone")} className={styles.cancelX}>❌</button>
+                    return (
+                        <div className={styles.formControl} key={field}>
+                            <label className={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1).replace("_", " ")}</label>
+                            {!isCustom ? (
+                                <select
+                                    className={styles.select}
+                                    onChange={(e) => handleSelect(field as keyof typeof formData, e.target.value)}
+                                    value={formData[field as keyof typeof formData]}
+                                >
+                                    <option value="">Select {field}</option>
+                                    {options.map((option) => (
+                                        <option key={option} value={option}>{option}</option>
+                                    ))}
+                                </select>
+                            ) : (
+                                <div className={styles.customInputWrapper}>
+                                    <input
+                                        type="text"
+                                        name={field}
+                                        placeholder={`Your Custom ${field}`}
+                                        className={styles.input}
+                                        value={formData[field as keyof typeof formData]}
+                                        onChange={handleChange}
+                                    />
+                                    <button onClick={() => handleCancelCustom(field as keyof typeof custom)} className={styles.cancelX}>❌</button>
+                                </div>
+                            )}
                         </div>
-                    )}
-                </div>
+                    );
+                })}
 
-                <div className={styles.formControl}>
-                    <label className={styles.label}>Visual Style</label>
-                    {!custom.visual_style ? (
-                        <select
-                            className={styles.select}
-                            onChange={(e) => handleSelect("visual_style", e.target.value)}
-                            value={formData.visual_style}
-                        >
-                            <option value="">Select Visual Style</option>
-                            {visualOptions.map((option) => (
-                                <option key={option} value={option}>{option}</option>
-                            ))}
-                        </select>
-                    ) : (
-                        <div className={styles.customInputWrapper}>
-                            <input
-                                type="text"
-                                name="visual_style"
-                                placeholder="Your Custom Visual Style"
-                                className={styles.input}
-                                value={formData.visual_style}
-                                onChange={handleChange}
-                            />
-                            <button onClick={() => handleCancelCustom("visual_style")} className={styles.cancelX}>❌</button>
-                        </div>
-                    )}
-                </div>
-
+                {/* Plot Setup */}
                 <div className={styles.formControl}>
                     <label className={styles.label}>Plot Setup</label>
                     <textarea
@@ -192,12 +155,22 @@ export default function CreateStorytellerModal({ onClose, onCreated }: Props) {
                     />
                 </div>
 
+                {/* Upload Image */}
+                <div className={styles.formControl}>
+                    <label className={styles.label}>Upload Storyteller Picture</label>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                    />
+                </div>
+
+                {/* Error */}
                 {error && <div className={styles.error}>{error}</div>}
 
+                {/* Buttons */}
                 <div className={styles.actions}>
-                    <button onClick={onClose} className={styles.cancelBtn}>
-                        Cancel
-                    </button>
+                    <button onClick={onClose} className={styles.cancelBtn}>Cancel</button>
                     <button onClick={handleSubmit} disabled={loading}>
                         {loading ? "Creating..." : "Create"}
                     </button>

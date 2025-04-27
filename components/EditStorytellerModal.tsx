@@ -14,6 +14,7 @@ const visualOptions = ["Realistic", "Comic", "Painterly", "Pixel Art", "Anime", 
 
 export default function EditStorytellerModal({ storyteller, onClose, onUpdated }: Props) {
   const [formData, setFormData] = useState({ ...storyteller });
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [custom, setCustom] = useState({
     genre: !genreOptions.includes(storyteller.genre),
@@ -50,8 +51,21 @@ export default function EditStorytellerModal({ storyteller, onClose, onUpdated }
     }
 
     setLoading(true);
+    setError("");
+
     try {
-      await api.put(`/storytellers/${storyteller.id}`, formData);
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        data.append(key, String(value));
+      });      
+      if (imageFile) {
+        data.append("image", imageFile);
+      }
+
+      await api.put(`/storytellers/${storyteller.id}`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       onUpdated();
       onClose();
     } catch (err: any) {
@@ -79,6 +93,7 @@ export default function EditStorytellerModal({ storyteller, onClose, onUpdated }
           />
         </div>
 
+        {/* Genre, Tone, Visual Style */}
         {["genre", "tone", "visual_style"].map((field) => {
           const options = { genre: genreOptions, tone: toneOptions, visual_style: visualOptions }[field]!;
           const isCustom = custom[field as keyof typeof custom];
@@ -92,7 +107,7 @@ export default function EditStorytellerModal({ storyteller, onClose, onUpdated }
                   onChange={(e) => handleSelect(field as keyof typeof formData, e.target.value)}
                   value={formData[field as keyof typeof formData]}
                 >
-                  <option value="">{`Select ${field}`}</option>
+                  <option value="">Select {field}</option>
                   {options.map((option) => (
                     <option key={option} value={option}>{option}</option>
                   ))}
@@ -114,6 +129,7 @@ export default function EditStorytellerModal({ storyteller, onClose, onUpdated }
           );
         })}
 
+        {/* Plot Setup */}
         <div className={styles.formControl}>
           <label className={styles.label}>Plot Setup</label>
           <textarea
@@ -123,6 +139,16 @@ export default function EditStorytellerModal({ storyteller, onClose, onUpdated }
             rows={4}
             value={formData.plot_setup}
             onChange={handleChange}
+          />
+        </div>
+
+        {/* Upload New Image */}
+        <div className={styles.formControl}>
+          <label className={styles.label}>Change Storyteller Picture (optional)</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImageFile(e.target.files?.[0] || null)}
           />
         </div>
 

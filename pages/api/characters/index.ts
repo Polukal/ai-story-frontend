@@ -1,5 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
+import formidable from "formidable";
+import FormData from "form-data";
+import fs from "fs";
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const flaskUrl = "http://localhost:5050/api/characters";
@@ -14,11 +23,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (req.method === "POST") {
-      const response = await axios.post(flaskUrl, req.body, {
-        headers: { cookie: req.headers.cookie ?? "" },
-        withCredentials: true,
+      const form = formidable({ keepExtensions: true });
+
+      form.parse(req, async (err, fields, files) => {
+        if (err) {
+          console.error("Form parse error:", err);
+          return res.status(400).json({ message: "Failed to parse form data" });
+        }
+
+        const formData = new FormData();
+        Object.entries(fields).forEach(([key, value]) => {
+          formData.append(key, String(Array.isArray(value) ? value[0] : value));
+        });
+
+        if (files.image) {
+          const file = Array.isArray(files.image) ? files.image[0] : files.image;
+          formData.append(
+            "image",
+            fs.createReadStream(file.filepath),
+            file.originalFilename || "upload.jpg"
+          );
+        }
+
+        const response = await axios.post(flaskUrl, formData, {
+          headers: {
+            ...formData.getHeaders(),
+            cookie: req.headers.cookie ?? "",
+          },
+          withCredentials: true,
+        });
+
+        return res.status(201).json(response.data);
       });
-      return res.status(201).json(response.data);
+
+      return;
     }
 
     return res.status(405).json({ message: "Method not allowed" });

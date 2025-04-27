@@ -1,19 +1,16 @@
 .storytellersContainer {
-    padding: 3rem;
-    color: white;
-  
-    h1 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 2rem;
-    }
-  }
-  
-  .grid {
-    display: grid;
-    gap: 2rem;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  }
+  padding: 3rem;
+  color: white;
+  max-width: 100%;
+}
+
+.grid {
+  flex-wrap: wrap;
+  display: flex;
+  grid-gap: 2rem;
+  gap: 2rem;
+  max-width: 100%;
+}
   
   .card {
     background: #2d2148;
@@ -23,6 +20,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    width: 18rem;
   
     h2 {
       font-size: 1.4rem;
@@ -76,3 +74,11 @@
     font-size: 1.2rem;
   }
   
+
+  .characterImage {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }

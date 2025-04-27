@@ -15,6 +15,7 @@ type Storyteller = {
   tone: string;
   plot_setup: string;
   visual_style: string;
+  image_url?: string;  // <<< added image_url
 };
 
 export default function StorytellersPage() {
@@ -58,11 +59,19 @@ export default function StorytellersPage() {
       <div className={styles.grid}>
         {storytellers.map((s) => (
           <div key={s.id} className={styles.card}>
+            {/* If there's an image, show it */}
+            {s.image_url ? (
+              <img src={s.image_url} alt={s.title} className={styles.cardImage} />
+            ) : (
+              <img src="/avatar_wizard.png" alt="Default Avatar" className={styles.cardImage} />
+            )}
+
             <h2>{s.title}</h2>
             <p><strong>Genre:</strong> {s.genre}</p>
             <p><strong>Tone:</strong> {s.tone}</p>
             <p><strong>Visual Style:</strong> {s.visual_style}</p>
             <p className={styles.plot}><strong>Setup:</strong> {s.plot_setup}</p>
+
             <div className={styles.actions}>
               <button onClick={() => setSelected(s)}>✏️ Edit</button>
               <button onClick={() => handleDelete(s.id)}>🗑 Delete</button>

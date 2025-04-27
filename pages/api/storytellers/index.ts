@@ -1,33 +1,67 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
+import formidable from 'formidable';
+import FormData from 'form-data';
+import fs from 'fs';
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const baseURL = 'http://localhost:5050/api/storytellers';
+  const flaskUrl = "http://localhost:5050/api/storytellers";
 
   try {
     if (req.method === 'GET') {
-      const response = await axios.get(baseURL, {
+      const response = await axios.get(flaskUrl, {
+        headers: { cookie: req.headers.cookie ?? "" },
         withCredentials: true,
-        headers: {
-          cookie: req.headers.cookie ?? '',
-        },
       });
       return res.status(200).json(response.data);
     }
 
     if (req.method === 'POST') {
-      const response = await axios.post(baseURL, req.body, {
-        withCredentials: true,
-        headers: {
-          cookie: req.headers.cookie ?? '',
-        },
+      const form = formidable({ keepExtensions: true });
+
+      form.parse(req, async (err, fields, files) => {
+        if (err) {
+          console.error("Form parse error:", err);
+          return res.status(400).json({ message: "Failed to parse form data" });
+        }
+
+        const formData = new FormData();
+        Object.entries(fields).forEach(([key, value]) => {
+          formData.append(key, String(Array.isArray(value) ? value[0] : value));
+        });
+
+        if (files.image) {
+          const file = Array.isArray(files.image) ? files.image[0] : files.image;
+          formData.append(
+            "image",
+            fs.createReadStream(file.filepath),
+            file.originalFilename || "upload.jpg"
+          );
+        }
+
+        const response = await axios.post(flaskUrl, formData, {
+          headers: {
+            ...formData.getHeaders(),
+            cookie: req.headers.cookie ?? '',
+          },
+          withCredentials: true,
+        });
+
+        return res.status(200).json(response.data);
       });
-      return res.status(200).json(response.data);
+
+      return;
     }
 
     return res.status(405).json({ message: 'Method not allowed' });
   } catch (error: any) {
-    console.error('Storyteller error:', error.response?.data ?? error.message);
+    console.error('Storyteller API Error:', error.response?.data ?? error.message);
     return res.status(error.response?.status ?? 500).json({
       message: error.response?.data?.message ?? 'Storyteller operation failed',
     });

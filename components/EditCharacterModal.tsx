@@ -8,6 +8,7 @@ type Character = {
   role: string;
   traits: string;
   backstory: string;
+  image_url?: string;
 };
 
 type Props = {
@@ -20,6 +21,7 @@ export default function EditCharacterModal({ character, onClose, onUpdated }: Pr
   const [formData, setFormData] = useState({ ...character });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,8 +34,24 @@ export default function EditCharacterModal({ character, onClose, onUpdated }: Pr
     }
 
     setLoading(true);
+    setError("");
+
     try {
-      await api.put(`/characters/${character.id}`, formData);
+      const data = new FormData();
+      data.append("name", formData.name);
+      data.append("role", formData.role);
+      data.append("traits", formData.traits);
+      data.append("backstory", formData.backstory);
+      if (imageFile) {
+        data.append("image", imageFile);
+      }
+
+      await api.put(`/characters/${character.id}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
       onUpdated();
       onClose();
     } catch (err: any) {
@@ -94,6 +112,15 @@ export default function EditCharacterModal({ character, onClose, onUpdated }: Pr
             rows={4}
             value={formData.backstory}
             onChange={handleChange}
+          />
+        </div>
+
+        <div className={styles.formControl}>
+          <label className={styles.label}>Change Picture (Optional)</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImageFile(e.target.files?.[0] || null)}
           />
         </div>
 
