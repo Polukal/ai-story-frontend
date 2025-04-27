@@ -30,6 +30,8 @@ export default function ChatPage() {
 
   const [inputValue, setInputValue] = useState("");
 
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5050";
+
   useEffect(() => {
     setIsLoggedIn(true);
 
@@ -92,15 +94,10 @@ export default function ChatPage() {
       setContext(newContext);
       setHasStarted(true);
     } catch (err: any) {
-      console.log(err.response.data.error)
-      if (
-        err?.response?.status === 403 &&
-        err?.response?.data?.error === "Insufficient credits"
-      ) {
+      console.log(err.response?.data?.error);
+      if (err?.response?.status === 403 && err?.response?.data?.error === "Insufficient credits") {
         setShowCreditModal(true);
-      }
-
-      else {
+      } else {
         console.error("Failed to start story:", err);
       }
     } finally {
@@ -179,7 +176,11 @@ export default function ChatPage() {
                     onClick={() => !isLoadingStory && setStoryteller(s)}
                   >
                     <div className={styles.cardContent}>
-                      <img src="/avatar_wizard.png" className={styles.cardImage} alt="Storyteller" />
+                      <img
+                        src={s.image_url ? `${backendUrl}${s.image_url}` : "/avatar_wizard.png"}
+                        className={styles.cardImage}
+                        alt={s.title}
+                      />
                       <div>
                         <h4>{s.title}</h4>
                         <p>{s.genre} • {s.tone}</p>
@@ -190,7 +191,6 @@ export default function ChatPage() {
               )}
             </div>
           </div>
-
 
           <div className={styles.horizontalSection}>
             <h3>🧝 Select a Character</h3>
@@ -205,7 +205,11 @@ export default function ChatPage() {
                     onClick={() => !isLoadingStory && setCharacter(c)}
                   >
                     <div className={styles.cardContent}>
-                      <img src="/avatar_wizard.png" className={styles.cardImage} alt="Character" />
+                      <img
+                        src={c.image_url ? `${backendUrl}${c.image_url}` : "/avatar_wizard.png"}
+                        className={styles.cardImage}
+                        alt={c.name}
+                      />
                       <div>
                         <h4>{c.name}</h4>
                         <p>{c.role} • {c.traits}</p>
@@ -223,13 +227,21 @@ export default function ChatPage() {
           <div className={styles.startBox}>
             <div className={styles.startRow}>
               <div className={styles.infoCard}>
-                <img src="/avatar_wizard.png" className={styles.imageBottom} alt="Storyteller" />
+                <img
+                  src={storyteller.image_url ? `${backendUrl}${storyteller.image_url}` : "/avatar_wizard.png"}
+                  className={styles.imageBottom}
+                  alt={storyteller.title}
+                />
                 <div className={styles.selectedBoxBottom}>
                   <strong>🧙 Storyteller:</strong> {storyteller.title}
                 </div>
               </div>
               <div className={styles.infoCard}>
-                <img src="/avatar_wizard.png" className={styles.imageBottom} alt="Character" />
+                <img
+                  src={character.image_url ? `${backendUrl}${character.image_url}` : "/avatar_wizard.png"}
+                  className={styles.imageBottom}
+                  alt={character.name}
+                />
                 <div className={styles.selectedBoxBottom}>
                   <strong>🧝 Character:</strong> {character.name}
                 </div>
@@ -254,13 +266,21 @@ export default function ChatPage() {
       <div className={styles.sidebar}>
         <div className={styles.profileCard}>
           <h3>Storyteller</h3>
-          <img src="/avatar_wizard.png" className={styles.sidebarImage} alt="Storyteller" />
+          <img
+            src={storyteller?.image_url ? `${backendUrl}${storyteller.image_url}` : "/avatar_wizard.png"}
+            className={styles.sidebarImage}
+            alt={storyteller?.title}
+          />
           <h4>{storyteller?.title}</h4>
           <p>{storyteller?.genre} • {storyteller?.tone}</p>
         </div>
         <div className={styles.profileCard}>
           <h3>Player Character</h3>
-          <img src="/avatar_wizard.png" className={styles.sidebarImage} alt="Character" />
+          <img
+            src={character?.image_url ? `${backendUrl}${character.image_url}` : "/avatar_wizard.png"}
+            className={styles.sidebarImage}
+            alt={character?.name}
+          />
           <h4>{character?.name}</h4>
           <p>{character?.role}</p>
           <small>{character?.traits}</small>
@@ -273,7 +293,6 @@ export default function ChatPage() {
           inputValue={inputValue}
           setInputValue={setInputValue}
         />
-
       </div>
       {activeImage && <ImageModal imageUrl={activeImage} onClose={() => setActiveImage(null)} />}
       <ChatInput
@@ -283,6 +302,5 @@ export default function ChatPage() {
         setInputValue={setInputValue}
       />
     </main>
-
   );
 }
